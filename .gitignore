@@ -1,0 +1,20 @@
+# Ignore Logs
+logs
+*.log
+npm-debug.log*
+
+# Ignore dependency directories
+node_modules/
+npm-debug.log
+
+# Ignore compiled
+# Compiled
+dist/
+lib/
+
+# Ignore optional npm cache directory
+.npm
+
+# Ignore random files
+.DS_Store
+._DS_Store
