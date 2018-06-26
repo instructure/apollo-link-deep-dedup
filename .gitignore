@@ -2,6 +2,7 @@
 logs
 *.log
 npm-debug.log*
+lerna-debug.log
 
 # Ignore dependency directories
 node_modules/

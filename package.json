@@ -1,0 +1,15 @@
+{
+    "name": "graphql-deep-dedup",
+    "description": "This repo contains source code and test harness of a custom [Apollo-Link](https://www.apollographql.com/docs/link/) library for GraphQL deduplication.",
+    "version": "1.0.0",
+    "scripts": {
+        "prelint": "lerna run lint-fix",
+        "lint": "lerna run -- lint",
+        "test": "lerna run -- test",
+        "prepush": "npm run lint && npm run test"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "lerna": "^2.11.0"
+    }
+}
