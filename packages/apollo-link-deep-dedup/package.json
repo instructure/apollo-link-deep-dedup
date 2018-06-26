@@ -12,7 +12,7 @@
         "watch": "tsc -w -p .",
         "prebuild": "npm run clean",
         "build": "tsc -p .",
-        "clean": "rimraf lib && rimraf coverage/",
+        "clean": "rimraf lib && rimraf coverage",
         "test": "jest",
         "coverage": "jest --coverage",
         "lint": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts ",
