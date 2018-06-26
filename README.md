@@ -8,7 +8,7 @@ This repo contains source code and test harness of a custom [Apollo-Link](https:
 
 There are three packages in the `packages/` folder:
 
-- `apollo-link-deep-dedup`: the core independant package of the implementation of `apollo-link-deep-dedup`
+- `apollo-link-deep-dedup`: the core independent package of the implementation of `apollo-link-deep-dedup`
 - `gql-client`: simple GraphQL test harness client for making GraphQL requests
 - `gql-server`: simple GraphQL test harness server for handling GraphQL requests
 
@@ -38,7 +38,7 @@ Full snapshot of the repo structure:
 
 ### Getting Started
 
-```
+```shell
 git clone
 ```
 
@@ -48,7 +48,7 @@ On top of that, we use [`Lerna`](https://lernajs.io/) for codebase management:
 
 In the root directory of this repo:
 
-```
+```shell
 npm install
 ```
 
@@ -58,4 +58,4 @@ Useful commands (__In the root directory of this repo__):
 - `npm run clean`: cleans up all build and compiled artifacts across all packages
 - `npm run coverage`: reports tests coverages across all packages
 - `npm run prepush`: runs lint fixing, lint checking, and tests for all packages before pushing to git origin
-- `npm run printDir`: prints the directory/file structure trees of this repo
+- `npm run printDir`: prints the directory/file structure tree of this repo
