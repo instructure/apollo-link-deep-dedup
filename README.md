@@ -13,13 +13,15 @@ There are three packages in the `packages/` folder:
 - `gql-server`: simple GraphQL test harness server for handling GraphQL requests
 
 Full snapshot of the repo structure:
-```
+
+```text
 ├── README.md
 ├── lerna.json
 ├── package-lock.json
 ├── package.json
 ├── packages
 │   ├── apollo-link-deep-dedup
+│   │   ├── README.md
 │   │   ├── package-lock.json
 │   │   ├── package.json
 │   │   ├── src
@@ -29,8 +31,10 @@ Full snapshot of the repo structure:
 │   │   │   └── index.ts
 │   │   └── tsconfig.json
 │   ├── gql-client
+│   │   ├── README.md
 │   │   └── package.json
 │   └── gql-server
+│       ├── README.md
 │       └── package.json
 ├── tsconfig.json
 └── tslint.json
