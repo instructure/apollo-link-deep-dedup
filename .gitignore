@@ -8,9 +8,11 @@ node_modules/
 npm-debug.log
 
 # Ignore compiled
-# Compiled
 dist/
 lib/
+
+# Ignore coverage
+coverage/
 
 # Ignore optional npm cache directory
 .npm
