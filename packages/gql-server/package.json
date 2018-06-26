@@ -1,0 +1,14 @@
+{
+    "name": "gql-server",
+    "version": "1.0.0",
+    "description": "This package contains code of a simeple GraphQL server",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "GraphQL"
+    ],
+    "author": "Leon Tao Long <tlong@instructure.com>",
+    "license": "ISC"
+}
