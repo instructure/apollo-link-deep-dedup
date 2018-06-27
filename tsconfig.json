@@ -5,14 +5,16 @@
             "es6",
             "dom"
         ],
-        "module": "es2015",
+        "module": "commonjs",
         "moduleResolution": "node",
         "removeComments": false,
         "sourceMap": true,
         "declaration": true,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "noUnusedParameters": false,
         "noUnusedLocals": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "strict": true,
+        "alwaysStrict": true
     }
 }
