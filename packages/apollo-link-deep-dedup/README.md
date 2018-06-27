@@ -23,7 +23,7 @@ npm run test
 npm run coverage
 ```
 
-### Lint Ccecks
+### Lint checks
 
 ```shell
 npm run lint
