@@ -1,6 +1,6 @@
-# GraphQL Deep Dedup
+# apollo-link-deep-dedup
 
-This repo contains source code and test harness of a custom [Apollo-Link](https://www.apollographql.com/docs/link/) library for GraphQL deduplication
+This repo contains source code and test harness (GraphQL server and client) of a custom [Apollo-Link](https://www.apollographql.com/docs/link/) library for combining GraphQL queries and issuing minimal requests.
 
 ## Development Guide
 
@@ -12,7 +12,7 @@ There are three packages in the `packages/` folder:
 - `gql-client`: simple GraphQL test harness client for making GraphQL requests
 - `gql-server`: simple GraphQL test harness server for handling GraphQL requests
 
-Full snapshot of the repo structure:
+Full snapshot of repo structure:
 
 ```text
 ├── README.md
@@ -46,9 +46,9 @@ Full snapshot of the repo structure:
 git clone https://github.com/instructure/apollo-link-deep-dedup.git
 ```
 
-Each package is independently developed, versioned, and built. There is a specific package-level `README` for each of the packages for reference.
+Each package is independently developed, versioned, and built. There is a specific package-level `README.md` for each of the packages.
 
-On top of that, we use [`Lerna`](https://lernajs.io/) for codebase management:
+On top of that, we use [`Lerna`](https://lernajs.io/) for codebase-level source management:
 
 In the root directory of this repo:
 
@@ -56,11 +56,10 @@ In the root directory of this repo:
 npm install
 ```
 
-Useful commands (__in the root directory of this repo__):
+Useful commands (__in the root directory__):
 
-- `npm run push`: runs auto lint-fixs, lint checks, tests for all packages, and git-push to the remote origin of the current branch (note: direct push to master is prohibited)
-- `npm run test`: run all tests for all packages
+- `npm run push`: runs auto lint fixs, lint checks, and tests for all packages, and git-push to the remote origin of the current branch (__note:__ direct push to master is prohibited)
+- `npm run test`: runs all tests in all packages
+- `npm run coverage`: reports test coverages across all packages
 - `npm run build`: creates builds for all packages
 - `npm run clean`: cleans up all build and compiled artifacts across all packages
-- `npm run coverage`: reports tests coverages across all packages
-- `npm run printDir`: prints the directories/files structure tree of this repo
