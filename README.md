@@ -43,7 +43,7 @@ Full snapshot of the repo structure:
 ### Getting Started
 
 ```shell
-git clone
+git clone https://github.com/instructure/apollo-link-deep-dedup.git
 ```
 
 Each package is independently developed, versioned, and built. There is a specific package-level `README` for each of the packages for reference.
@@ -56,10 +56,11 @@ In the root directory of this repo:
 npm install
 ```
 
-Useful commands (__In the root directory of this repo__):
+Useful commands (__in the root directory of this repo__):
 
-- `npm run build`: creating builds for all packages
+- `npm run push`: runs auto lint-fixs, lint checks, tests for all packages, and git-push to the remote origin of the current branch (note: direct push to master is prohibited)
+- `npm run test`: run all tests for all packages
+- `npm run build`: creates builds for all packages
 - `npm run clean`: cleans up all build and compiled artifacts across all packages
 - `npm run coverage`: reports tests coverages across all packages
-- `npm run prepush`: runs lint fixing, lint checking, and tests for all packages before pushing to git origin
-- `npm run printDir`: prints the directory/file structure tree of this repo
+- `npm run printDir`: prints the directories/files structure tree of this repo

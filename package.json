@@ -9,8 +9,9 @@
         "coverage": "lerna run -- coverage",
         "clean": "lerna run -- clean",
         "build": "lerna run -- build",
-        "prepush": "npm run lint && npm run test",
-        "printDir": "npm run clean && tree -v --charset utf-8 -I node_modules"
+        "prepush": "npm run lint && npm run test && if test $(git rev-parse --abbrev-ref HEAD) = \"master\"; then echo \"Direct push to master is prohibited\"; exit 1; fi",
+        "printDir": "npm run clean && tree -v --charset utf-8 -I node_modules",
+        "push": "git push origin $(git rev-parse --abbrev-ref HEAD)"
     },
     "license": "ISC",
     "devDependencies": {
