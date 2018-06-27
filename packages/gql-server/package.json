@@ -2,14 +2,19 @@
     "name": "gql-server",
     "version": "1.0.0",
     "description": "This package contains code of a simeple GraphQL server",
-    "main": "index.js",
+    "module": "./lib/index.js",
+    "typings": "./lib/index.d.ts",
     "scripts": {
         "start": "nodemon ./lib/server.js",
-        "build": "tsc -p .",
         "watch": "tsc -w -p .",
-        "test": "echo \"Error: no test specified\" && exit 0",
+        "prebuild": "npm run clean",
+        "build": "tsc -p .",
+        "clean": "rimraf lib && rimraf coverage",
+        "test": "jest",
+        "coverage": "jest --coverage",
         "lint": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts ",
-        "lint-fix": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts --fix"
+        "lint-fix": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts --fix",
+        "prepublishOnly": "npm run clean && npm run build"
     },
     "keywords": [
         "GraphQL"
@@ -25,13 +30,29 @@
     },
     "devDependencies": {
         "@types/express": "^4.16.0",
+        "@types/jest": "^23.1.2",
         "@types/morgan": "^1.7.35",
         "@types/node": "^10.5.0",
         "install": "^0.12.1",
+        "jest": "^23.2.0",
         "morgan": "^1.9.0",
         "nodemon": "^1.17.5",
         "npm": "^6.1.0",
+        "rimraf": "^2.6.2",
+        "ts-jest": "^22.4.6",
         "tslint": "^5.10.0",
         "typescript": "^2.9.2"
+    },
+    "jest": {
+        "transform": {
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "json"
+        ]
     }
 }
