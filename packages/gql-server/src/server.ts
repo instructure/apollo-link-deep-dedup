@@ -8,28 +8,8 @@ import { makeExecutableSchema } from 'graphql-tools';
 import * as morgan from 'morgan';
 import * as winston from 'winston';
 
-// Some fake data
-const books = [
-    {
-        title: "Harry Potter and the Sorcerer's stone",
-        author: 'J.K. Rowling',
-    },
-    {
-        title: 'Jurassic Park',
-        author: 'Michael Crichton',
-    },
-];
-
-// The GraphQL schema in string form
-const typeDefs = `
-    type Query { books: [Book] }
-    type Book { title: String, author: String }
-  `;
-
-// The resolvers
-const resolvers = {
-    Query: { books: () => books },
-};
+import { resolvers } from './resolvers';
+import { typeDefs } from './typeDefs';
 
 // Put together a schema
 const schema = makeExecutableSchema({
@@ -40,7 +20,7 @@ const schema = makeExecutableSchema({
 // Initialize the app
 const app = express();
 
-// Add global middlewares.
+// Add global middlewares
 app.use(morgan(process.env.LOG_FORMAT || 'dev'));
 
 // Construct info logger
@@ -49,6 +29,7 @@ const logger: winston.Logger = winston.createLogger({
     format: winston.format.simple(),
     transports: [new winston.transports.Console()],
 });
+
 // The GraphQL endpoint
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 
