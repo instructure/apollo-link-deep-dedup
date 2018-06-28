@@ -1,7 +1,7 @@
 {
     "name": "gql-client",
     "version": "1.0.0",
-    "description": "This package contains code of a simeple GraphQL client",
+    "description": "This package contains code of a simple GraphQL client",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 0"
