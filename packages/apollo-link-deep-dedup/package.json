@@ -1,7 +1,7 @@
 {
     "name": "apollo-link-deep-dedup",
     "version": "1.0.0",
-    "description": "This package contains source code of a custom Apollo-Link library for GraphQL deduplication",
+    "description": "An Apollo Link library for GraphQL deduplication",
     "module": "./lib/index.js",
     "typings": "./lib/index.d.ts",
     "scripts": {
@@ -9,8 +9,7 @@
         "prebuild": "npm run clean",
         "build": "tsc -p .",
         "clean": "rimraf lib && rimraf coverage",
-        "test": "jest",
-        "coverage": "jest --coverage",
+        "test": "jest --coverage",
         "lint": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts ",
         "lint-fix": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts --fix",
         "prepublishOnly": "npm run clean && npm run build",
@@ -22,7 +21,7 @@
         "Query Deduplication"
     ],
     "author": "Leon Tao Long <tlong@instructure.com>",
-    "license": "ISC",
+    "license": "UNLICENSED",
     "dependencies": {
         "apollo-link": "^1.2.2"
     },

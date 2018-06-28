@@ -1,6 +1,6 @@
 # apollo-link-deep-dedup
 
-This repo contains source code and test harness (GraphQL server and client) of a custom [Apollo-Link](https://www.apollographql.com/docs/link/) library for combining GraphQL queries and issuing minimal requests.
+An [Apollo-Link](https://www.apollographql.com/docs/link/) library and test harness (GraphQL client and server) for combining GraphQL queries and issuing minimal requests.
 
 ## Development Guide
 
@@ -58,8 +58,7 @@ npm install
 
 Useful commands (__in the root directory__):
 
-- `npm run push`: runs auto lint fixs, lint checks, and tests for all packages, and git-push to the remote origin of the current branch (__note:__ direct push to master is prohibited)
+- `npm run push`: makes sure git is clean, runs linter and `git-push` to the remote origin of the current branch (__note:__ direct push to master is prohibited)
 - `npm run test`: runs all tests in all packages
-- `npm run coverage`: reports test coverages across all packages
 - `npm run build`: creates builds for all packages
 - `npm run clean`: cleans up all build and compiled artifacts across all packages

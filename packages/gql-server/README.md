@@ -1,3 +1,3 @@
 # gql-server
 
-This package contains code of a simeple GraphQL server
+A simple Node server that handles GraphQL requests

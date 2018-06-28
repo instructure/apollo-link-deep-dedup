@@ -19,12 +19,6 @@ npm run watch
 npm run test
 ```
 
-### Test coverage
-
-```shell
-npm run coverage
-```
-
 ### Lint check
 
 ```shell
