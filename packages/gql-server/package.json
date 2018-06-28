@@ -1,7 +1,7 @@
 {
     "name": "gql-server",
     "version": "1.0.0",
-    "description": "This package contains code of a simple GraphQL server",
+    "description": "A simple Node server that handles GraphQL requests",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 0"

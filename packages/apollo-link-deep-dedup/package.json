@@ -1,7 +1,7 @@
 {
     "name": "apollo-link-deep-dedup",
     "version": "1.0.0",
-    "description": "This package contains source code of a custom Apollo-Link library for GraphQL deduplication",
+    "description": "An Apollo Link library for GraphQL deduplication",
     "module": "./lib/index.js",
     "typings": "./lib/index.d.ts",
     "scripts": {
