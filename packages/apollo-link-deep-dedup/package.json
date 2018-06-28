@@ -22,7 +22,7 @@
         "Query Deduplication"
     ],
     "author": "Leon Tao Long <tlong@instructure.com>",
-    "license": "ISC",
+    "license": "UNLICENSED",
     "dependencies": {
         "apollo-link": "^1.2.2"
     },

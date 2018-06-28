@@ -13,7 +13,7 @@
         "printDir": "npm run clean && tree -v --charset utf-8 -I node_modules",
         "push": "git push origin $(git rev-parse --abbrev-ref HEAD)"
     },
-    "license": "ISC",
+    "license": "UNLICENSED",
     "devDependencies": {
         "lerna": "^2.11.0"
     }
