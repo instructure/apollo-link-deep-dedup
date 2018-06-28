@@ -3,7 +3,7 @@
     "description": "An Apollo Link library and test harness (GraphQL client and server) for GraphQL deduplication.",
     "version": "1.0.0",
     "scripts": {
-        "prelint": "lerna run -- lint-fix",
+        "lint-fix": "lerna run -- lint-fix",
         "lint": "lerna run -- lint",
         "test": "lerna run -- test",
         "coverage": "lerna run -- coverage",

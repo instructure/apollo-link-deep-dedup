@@ -58,7 +58,7 @@ npm install
 
 Useful commands (__in the root directory__):
 
-- `npm run push`: runs auto lint fixs, lint checks, and tests for all packages, and git-push to the remote origin of the current branch (__note:__ direct push to master is prohibited)
+- `npm run push`: makes sure git is clean, runs linter and `git-push` to the remote origin of the current branch (__note:__ direct push to master is prohibited)
 - `npm run test`: runs all tests in all packages
 - `npm run coverage`: reports test coverages across all packages
 - `npm run build`: creates builds for all packages
