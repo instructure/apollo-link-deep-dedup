@@ -1,0 +1,50 @@
+{
+    "name": "apollo-link-deep-dedup",
+    "version": "1.0.0",
+    "description": "An Apollo Link library for GraphQL deduplication",
+    "module": "./lib/index.js",
+    "typings": "./lib/index.d.ts",
+    "scripts": {
+        "watch": "tsc -w -p .",
+        "prebuild": "npm run clean",
+        "build": "tsc -p .",
+        "clean": "rimraf lib && rimraf coverage",
+        "test": "jest --coverage",
+        "lint": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts ",
+        "lint-fix": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts --fix",
+        "prepublishOnly": "npm run clean && npm run build",
+        "push": "cd ../../; npm run push"
+    },
+    "keywords": [
+        "GraphQL",
+        "Apollo-Link",
+        "Query Deduplication"
+    ],
+    "author": "Leon Tao Long <tlong@instructure.com>",
+    "license": "UNLICENSED",
+    "dependencies": {
+        "apollo-link": "^1.2.2"
+    },
+    "devDependencies": {
+        "@types/graphql": "^0.13.1",
+        "@types/jest": "^23.1.1",
+        "graphql": "^0.13.2",
+        "jest": "^23.2.0",
+        "rimraf": "^2.6.2",
+        "ts-jest": "^22.4.6",
+        "tslint": "^5.10.0",
+        "typescript": "^2.9.2"
+    },
+    "jest": {
+        "transform": {
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "json"
+        ]
+    }
+}

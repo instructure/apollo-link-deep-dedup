@@ -2,15 +2,18 @@
 logs
 *.log
 npm-debug.log*
+lerna-debug.log
 
 # Ignore dependency directories
 node_modules/
 npm-debug.log
 
 # Ignore compiled
-# Compiled
 dist/
 lib/
+
+# Ignore coverage
+coverage/
 
 # Ignore optional npm cache directory
 .npm
