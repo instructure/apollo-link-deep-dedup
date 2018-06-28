@@ -6,6 +6,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { makeExecutableSchema } from 'graphql-tools';
 import * as morgan from 'morgan';
+import * as winston from 'winston';
 
 // Some fake data
 const books = [
@@ -42,6 +43,12 @@ const app = express();
 // Add global middlewares.
 app.use(morgan(process.env.LOG_FORMAT || 'dev'));
 
+// Construct info logger
+const logger: winston.Logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.simple(),
+    transports: [new winston.transports.Console()],
+});
 // The GraphQL endpoint
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 
@@ -50,5 +57,5 @@ app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 // Start the server
 app.listen(3000, () => {
-    console.log('Go to http://localhost:3000/graphiql to run queries!');
+    logger.info('Go to http://localhost:3000/graphiql to run queries!');
 });
