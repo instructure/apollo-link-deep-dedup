@@ -1,6 +1,6 @@
 # apollo-link-deep-dedup
 
-This repo contains source code and test harness (GraphQL server and client) of a custom [Apollo-Link](https://www.apollographql.com/docs/link/) library for combining GraphQL queries and issuing minimal requests.
+An [Apollo-Link](https://www.apollographql.com/docs/link/) library and test harness (GraphQL client and server) for combining GraphQL queries and issuing minimal requests.
 
 ## Development Guide
 

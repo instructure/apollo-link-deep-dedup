@@ -1,3 +1,3 @@
 # gql-client
 
-This package contains code of a simple GraphQL client
+A simple web client that issues GraphQL requests
