@@ -6,7 +6,6 @@
         "lint-fix": "lerna run -- lint-fix",
         "lint": "lerna run -- lint",
         "test": "lerna run -- test",
-        "coverage": "lerna run -- coverage",
         "clean": "lerna run -- clean",
         "build": "lerna run -- build",
         "prepush": "test -z \"$(git status --porcelain)\" || (echo \"Respository is dirty.\"; exit 1) && npm run lint",
