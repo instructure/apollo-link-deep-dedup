@@ -9,7 +9,7 @@
         "coverage": "lerna run -- coverage",
         "clean": "lerna run -- clean",
         "build": "lerna run -- build",
-        "prepush": "npm run lint && npm run test && if test $(git rev-parse --abbrev-ref HEAD) = \"master\"; then echo \"Direct push to master is prohibited\"; exit 1; fi",
+        "prepush": "test -z \"$(git status --porcelain)\" || (echo \"Respository is dirty.\"; exit 1) && npm run lint",
         "printDir": "npm run clean && tree -v --charset utf-8 -I node_modules",
         "push": "git push origin $(git rev-parse --abbrev-ref HEAD)"
     },
