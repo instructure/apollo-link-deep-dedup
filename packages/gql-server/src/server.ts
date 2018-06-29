@@ -9,7 +9,7 @@ import * as morgan from 'morgan';
 import * as winston from 'winston';
 
 import { resolvers } from './resolvers';
-import { typeDefs } from './typeDefs';
+import { schema as typeDefs } from './schema';
 
 // Put together a schema
 const schema = makeExecutableSchema({
