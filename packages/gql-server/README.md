@@ -12,12 +12,14 @@ npm run watch
 ```
 
 Open another terminal console
+
 ```shell
 npm start
 ```
 
 Go to [localhost:3000/graphiql](localhost:3000/graphiql) to run queries.
  Server will automatically restart on any saved changes.
+
 ### Test
 
 ```shell
