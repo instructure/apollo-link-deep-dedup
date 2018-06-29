@@ -17,7 +17,7 @@ Open another terminal console
 npm start
 ```
 
-Go to [http://localhost:3000/graphiql](http://localhost:3000/graphiql){:target="_blank"} to run queries.
+Go to [http://localhost:3000/graphiql](http://localhost:3000/graphiql) to run queries.
  Server will automatically restart on any saved changes.
 
 ### Test
