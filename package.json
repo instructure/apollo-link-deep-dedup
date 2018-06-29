@@ -8,7 +8,7 @@
         "test": "lerna run -- test",
         "clean": "lerna run -- clean",
         "build": "lerna run -- build",
-        "prepush": "test -z \"$(git status --porcelain)\" || (echo \"Respository is dirty.\"; exit 1) && npm run lint",
+        "prepush": "test -z \"$(git status --porcelain)\" || (echo \"Respository is dirty.\"; exit 1) && npm run lint && npm run test",
         "printDir": "npm run clean && tree -v --charset utf-8 -I node_modules",
         "push": "git push origin $(git rev-parse --abbrev-ref HEAD)"
     },
