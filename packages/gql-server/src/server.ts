@@ -41,9 +41,8 @@ app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 // Start the server
 app.listen(SERVER_PORT, () => {
-    if (NODE_ENV === 'development') {
-        logger.info(`Go to http://localhost:${SERVER_PORT}/graphiql to run queries!`);
-    } else {
-        logger.info(`Server is listening on port ${SERVER_PORT}`);
-    }
+    const info = NODE_ENV === 'development' ?
+        `Go to http://localhost:${SERVER_PORT}/graphiql to run queries!` :
+        `Server is listening on port ${SERVER_PORT}`;
+    logger.info(info);
 });
