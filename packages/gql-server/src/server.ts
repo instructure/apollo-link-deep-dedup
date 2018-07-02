@@ -11,6 +11,9 @@ import * as winston from 'winston';
 import { resolvers } from './resolvers';
 import { schema as typeDefs } from './schema';
 
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const SERVER_PORT = NODE_ENV === 'development' ? '3000' : '80';
+
 // Put together a schema
 const schema = makeExecutableSchema({
     typeDefs,
@@ -37,6 +40,10 @@ app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 // Start the server
-app.listen(3000, () => {
-    logger.info('Go to http://localhost:3000/graphiql to run queries!');
+app.listen(SERVER_PORT, () => {
+    if (NODE_ENV === 'development') {
+        logger.info(`Go to http://localhost:${SERVER_PORT}/graphiql to run queries!`);
+    } else {
+        logger.info(`Server is listening on port ${SERVER_PORT}`);
+    }
 });
