@@ -4,8 +4,7 @@
     "description": "A simple web client that issues GraphQL requests",
     "main": "index.js",
     "scripts": {
-        "test": "jest '(/__tests__/.*)\\.(ts|tsx|js)$' --coverage",
-        "start": "jest client.test.ts --coverage",
+        "test": "jest --coverage",
         "build": "tsc -p .",
         "clean": "rimraf lib && rimraf coverage",
         "lint": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts ",

@@ -1,15 +1,15 @@
 import 'jest';
 
-import { client } from './apolloClient';
+import { client } from '../apolloClient';
 import {
     fetchAllAuthors,
     fetchAllPosts,
     fetchAuthorById,
     upvotePostByPostId,
-} from './queries';
+} from '../queries';
 
-import Author from './models/Author';
-import Post from './models/Post';
+import Author from '../models/Author';
+import Post from '../models/Post';
 
 describe('Client', () => {
     it('fetches all authors', async () => {

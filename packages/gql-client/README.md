@@ -8,7 +8,6 @@ A simple [Apollo Client](https://www.apollographql.com/docs/react/) that issues 
 
 ```shell
 npm install
-npm start
 ```
 
 ### Test
