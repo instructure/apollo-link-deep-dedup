@@ -20,6 +20,7 @@ export const schema = `
     type Query {
         posts: [Post]
         authors: [Author]
+        post(id: Int!): Post
         author(id: Int!): Author
     }
 

@@ -17,6 +17,7 @@ export const resolvers = {
         posts: (): Post[] => posts,
         authors: (): Author[] => authors,
         author: (_, { id }: QueryArgs): Author => find(authors, { id }) as Author,
+        post: (_, { id }: QueryArgs): Post => find(posts, { id }) as Post,
     },
 
     Mutation: {

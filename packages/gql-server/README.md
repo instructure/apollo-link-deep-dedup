@@ -23,7 +23,7 @@ Go to `http://localhost:3000/graphiql` to run queries.
 ### Test
 
 ```shell
-npm run test
+npm test
 ```
 
 ### Lint check
