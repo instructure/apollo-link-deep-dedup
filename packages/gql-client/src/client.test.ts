@@ -39,4 +39,3 @@ describe('Client', () => {
         expect(upvotedPost.votes).toBeGreaterThan(1);
     });
 });
-
