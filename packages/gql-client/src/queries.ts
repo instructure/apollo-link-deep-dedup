@@ -54,7 +54,7 @@ export const upvotePostByPostId = (postId: number) => {
                     title
                     votes
                     author {
-                    id
+                        id
                     }
                 }
             }` as DocumentNode,
