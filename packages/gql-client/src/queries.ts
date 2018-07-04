@@ -39,8 +39,28 @@ export const fetchAuthorById = (authorId: number) => {
         query: gql`
             {
                 author(id:${authorId}) {
+                    id
                     firstName
                     lastName
+                    posts {
+                        id
+                    }
+                }
+            }` as DocumentNode,
+    } as QueryOptions;
+};
+
+export const fetchPostById = (postId: number) => {
+    return {
+        query: gql`
+            {
+                post(id:${postId}) {
+                    id
+                    title
+                    votes
+                    author {
+                        id
+                    }
                 }
             }` as DocumentNode,
     } as QueryOptions;

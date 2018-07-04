@@ -1,120 +1,119 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Client fetches all authors 1`] = `
-Object {
-  "authors": Array [
-    Object {
-      "__typename": "Author",
-      "firstName": "Tom",
-      "id": 1,
-      "lastName": "Coleman",
-      "posts": Array [
-        Object {
-          "__typename": "Post",
-          "id": 1,
-          Symbol(id): "Post:1",
-        },
-      ],
-      Symbol(id): "Author:1",
-    },
-    Object {
-      "__typename": "Author",
-      "firstName": "Sashko",
-      "id": 2,
-      "lastName": "Stubailo",
-      "posts": Array [
-        Object {
-          "__typename": "Post",
-          "id": 2,
-          Symbol(id): "Post:2",
-        },
-        Object {
-          "__typename": "Post",
-          "id": 3,
-          Symbol(id): "Post:3",
-        },
-      ],
-      Symbol(id): "Author:2",
-    },
-    Object {
-      "__typename": "Author",
-      "firstName": "Mikhail",
-      "id": 3,
-      "lastName": "Novikov",
-      "posts": Array [
-        Object {
-          "__typename": "Post",
-          "id": 4,
-          Symbol(id): "Post:4",
-        },
-      ],
-      Symbol(id): "Author:3",
-    },
-  ],
-  Symbol(id): "ROOT_QUERY",
-}
+Array [
+  Object {
+    "__typename": "Author",
+    "firstName": "Tom",
+    "id": 1,
+    "lastName": "Coleman",
+    "posts": Array [
+      Object {
+        "__typename": "Post",
+        "id": 1,
+        Symbol(id): "Post:1",
+      },
+    ],
+    Symbol(id): "Author:1",
+  },
+  Object {
+    "__typename": "Author",
+    "firstName": "Sashko",
+    "id": 2,
+    "lastName": "Stubailo",
+    "posts": Array [
+      Object {
+        "__typename": "Post",
+        "id": 2,
+        Symbol(id): "Post:2",
+      },
+      Object {
+        "__typename": "Post",
+        "id": 3,
+        Symbol(id): "Post:3",
+      },
+    ],
+    Symbol(id): "Author:2",
+  },
+  Object {
+    "__typename": "Author",
+    "firstName": "Mikhail",
+    "id": 3,
+    "lastName": "Novikov",
+    "posts": Array [
+      Object {
+        "__typename": "Post",
+        "id": 4,
+        Symbol(id): "Post:4",
+      },
+    ],
+    Symbol(id): "Author:3",
+  },
+]
 `;
 
 exports[`Client fetches all posts 1`] = `
-Object {
-  "posts": Array [
-    Object {
-      "__typename": "Post",
-      "author": Object {
-        "__typename": "Author",
-        "id": 1,
-        Symbol(id): "Author:1",
-      },
+Array [
+  Object {
+    "__typename": "Post",
+    "author": Object {
+      "__typename": "Author",
       "id": 1,
-      "title": "Introduction to GraphQL",
-      Symbol(id): "Post:1",
+      Symbol(id): "Author:1",
     },
-    Object {
-      "__typename": "Post",
-      "author": Object {
-        "__typename": "Author",
-        "id": 2,
-        Symbol(id): "Author:2",
-      },
+    "id": 1,
+    "title": "Introduction to GraphQL",
+    Symbol(id): "Post:1",
+  },
+  Object {
+    "__typename": "Post",
+    "author": Object {
+      "__typename": "Author",
       "id": 2,
-      "title": "Welcome to Meteor",
-      Symbol(id): "Post:2",
+      Symbol(id): "Author:2",
     },
-    Object {
-      "__typename": "Post",
-      "author": Object {
-        "__typename": "Author",
-        "id": 2,
-        Symbol(id): "Author:2",
-      },
+    "id": 2,
+    "title": "Welcome to Meteor",
+    Symbol(id): "Post:2",
+  },
+  Object {
+    "__typename": "Post",
+    "author": Object {
+      "__typename": "Author",
+      "id": 2,
+      Symbol(id): "Author:2",
+    },
+    "id": 3,
+    "title": "Advanced GraphQL",
+    Symbol(id): "Post:3",
+  },
+  Object {
+    "__typename": "Post",
+    "author": Object {
+      "__typename": "Author",
       "id": 3,
-      "title": "Advanced GraphQL",
-      Symbol(id): "Post:3",
+      Symbol(id): "Author:3",
     },
-    Object {
-      "__typename": "Post",
-      "author": Object {
-        "__typename": "Author",
-        "id": 3,
-        Symbol(id): "Author:3",
-      },
-      "id": 4,
-      "title": "Launchpad is Cool",
-      Symbol(id): "Post:4",
-    },
-  ],
-  Symbol(id): "ROOT_QUERY",
-}
+    "id": 4,
+    "title": "Launchpad is Cool",
+    Symbol(id): "Post:4",
+  },
+]
 `;
 
 exports[`Client fetches author by id 1`] = `
 Object {
-  "author": Object {
-    "__typename": "Author",
-    "firstName": "Tom",
-    "lastName": "Coleman",
-    Symbol(id): "$ROOT_QUERY.author({\\"id\\":1})",
-  },
-  Symbol(id): "ROOT_QUERY",
+  "__typename": "Author",
+  "firstName": "Tom",
+  "id": 1,
+  "lastName": "Coleman",
+  "posts": Array [
+    Object {
+      "__typename": "Post",
+      "id": 1,
+      Symbol(id): "Post:1",
+    },
+  ],
+  Symbol(id): "Author:1",
 }
 `;
