@@ -90,6 +90,13 @@
         "semicolon": [
             true,
             "always"
+        ],
+        "prefer-const": true,
+        "quotemark": [
+            true,
+            "avoid-escape",
+            "jsx-double",
+            "single"
         ]
     }
 }

@@ -2,13 +2,58 @@
     "name": "gql-server",
     "version": "1.0.0",
     "description": "A simple Node server that handles GraphQL requests",
-    "main": "index.js",
+    "module": "./lib/index.js",
+    "typings": "./lib/index.d.ts",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 0"
+        "start": "nodemon ./lib/server.js",
+        "watch": "tsc -w -p .",
+        "prebuild": "npm run clean",
+        "build": "tsc -p .",
+        "clean": "rimraf lib && rimraf coverage",
+        "test": "jest --coverage",
+        "lint": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts ",
+        "lint-fix": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts --fix",
+        "prepublishOnly": "npm run clean && npm run build",
+        "push": "cd ../../; npm run push"
     },
     "keywords": [
         "GraphQL"
     ],
     "author": "Leon Tao Long <tlong@instructure.com>",
-    "license": "UNLICENSED"
+    "license": "UNLICENSED",
+    "dependencies": {
+        "apollo-server-express": "^1.3.6",
+        "body-parser": "^1.18.3",
+        "express": "^4.16.3",
+        "graphql": "^0.13.2",
+        "graphql-tools": "^3.0.4",
+        "lodash": "^4.17.10",
+        "winston": "^3.0.0"
+    },
+    "devDependencies": {
+        "@types/express": "^4.16.0",
+        "@types/jest": "^23.1.2",
+        "@types/lodash": "^4.14.110",
+        "@types/morgan": "^1.7.35",
+        "@types/node": "^10.5.0",
+        "jest": "^23.2.0",
+        "morgan": "^1.9.0",
+        "nodemon": "^1.17.5",
+        "rimraf": "^2.6.2",
+        "ts-jest": "^22.4.6",
+        "tslint": "^5.10.0",
+        "typescript": "^2.9.2"
+    },
+    "jest": {
+        "transform": {
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "json"
+        ]
+    }
 }
