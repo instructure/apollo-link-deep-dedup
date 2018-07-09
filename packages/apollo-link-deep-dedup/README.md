@@ -16,7 +16,7 @@ npm run watch
 ### Test
 
 ```shell
-npm run test
+npm test
 ```
 
 ### Lint check

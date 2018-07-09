@@ -23,6 +23,7 @@
     "author": "Leon Tao Long <tlong@instructure.com>",
     "license": "UNLICENSED",
     "dependencies": {
+        "apollo-cache": "^1.1.12",
         "apollo-link": "^1.2.2"
     },
     "devDependencies": {
