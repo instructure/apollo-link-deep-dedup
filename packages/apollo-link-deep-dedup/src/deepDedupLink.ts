@@ -10,14 +10,14 @@ import {
 } from 'apollo-link';
 
 export type DeepDedupLinkConfig = {
-    cache?: ApolloCache<any>;
+    cache: ApolloCache<any>;
 };
 
 /*
  * Expects context to contain the forceFetch field if no dedup
  */
 export class DeepDedupLink extends ApolloLink {
-    private cache: ApolloCache<any>;
+    protected cache: ApolloCache<any>;
 
     constructor(config: DeepDedupLinkConfig) {
         super();
