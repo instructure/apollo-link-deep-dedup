@@ -25,7 +25,7 @@ export class DeepDedupLink extends ApolloLink {
     }
 
     public request(operation: Operation, forward: NextLink): Observable<FetchResult> {
-        // directly proceed to the downstream link if forceFetch
+        // directly proceed to downstream links if forceFetch
         if (operation.getContext().forceFetch) {
             return forward(operation);
         }

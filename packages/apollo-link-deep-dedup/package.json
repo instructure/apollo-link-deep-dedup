@@ -29,7 +29,9 @@
     "devDependencies": {
         "@types/graphql": "^0.13.1",
         "@types/jest": "^23.1.1",
+        "apollo-cache-inmemory": "^1.2.5",
         "graphql": "^0.13.2",
+        "graphql-tag": "^2.9.2",
         "jest": "^23.2.0",
         "rimraf": "^2.6.2",
         "ts-jest": "^22.4.6",
