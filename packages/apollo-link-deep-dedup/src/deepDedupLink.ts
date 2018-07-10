@@ -44,9 +44,9 @@ export class DeepDedupLink extends ApolloLink {
                 complete: observer.complete.bind(observer),
             });
 
-            //cleanup function, which is accessed through the unsubscribe
+            // cleanup function
             return () => {
-                //cleanup the inner observables subscription
+                // unsubscribe resulting link
                 subscription.unsubscribe();
             };
         });
