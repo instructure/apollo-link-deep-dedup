@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 import { MutationOptions, QueryOptions } from 'apollo-client';
 import { DocumentNode } from 'graphql';
