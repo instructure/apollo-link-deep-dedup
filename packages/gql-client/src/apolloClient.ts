@@ -30,5 +30,5 @@ const link = ApolloLink.from([
 // Initialize Apollo Client
 export const client = new ApolloClient({
     cache: cache,
-    link, // [apollo-deep-dedup-link, apollo-http-link]
+    link,
 });
