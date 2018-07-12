@@ -1,7 +1,10 @@
 import { ApolloQueryResult } from 'apollo-client';
 import 'jest';
 
-import { cache, client } from '../apolloClient';
+import {
+    cache,
+    client,
+} from '../apolloClient';
 import {
     fetchAllAuthors,
     fetchAllPosts,
