@@ -168,13 +168,15 @@ const reportFetchStatus = (
         Query Body:
 
         ${prettyStringifyJSON(JSON.parse(query))}
+        Formatted query field:
+
+        ${JSON.parse(query).query}
         `
         :
         `No network request has been issued.`;
 
-
     console.log(`TEST ${textIndex} Network Fetch Status:
 
-${ report}
-`);
+        ${report}
+    `);
 };
