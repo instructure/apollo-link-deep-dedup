@@ -1,10 +1,9 @@
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloQueryResult } from 'apollo-client';
+import * as fetcher from 'cross-fetch';
 import 'jest';
 
-import {
-    cache,
-    client,
-} from '../apolloClient';
+import createClient from '../apolloClient';
 import {
     fetchAllAuthors,
     fetchAllPosts,
@@ -23,9 +22,8 @@ interface MockDeclaration {
     defaultCalledTimes: number;
 }
 
-describe('Client', () => {
-    // initialize cache mocks
-    const cacheMockDeclarations: MockDeclaration[] = [
+const declareCacheMocks = (): MockDeclaration[] => {
+    return [
         {
             name: 'read',
             defaultCalledTimes: 1,
@@ -55,9 +53,20 @@ describe('Client', () => {
             defaultCalledTimes: 2,
         },
     ];
+};
+
+describe('Client', () => {
+    const cache = new InMemoryCache();
+    const fetch = fetcher.fetch;
+
+    // initialize mocks for spying functions
+    const cacheMockDeclarations: MockDeclaration[] = declareCacheMocks();
     const cacheMocks: jest.SpyInstance<any>[] = cacheMockDeclarations.map(declaration =>
         jest.spyOn(cache, declaration.name as any),
     );
+
+    // initialize client
+    const client = createClient(cache, fetch);
 
     beforeEach(() => {
         cacheMocks.forEach(mock => mock.mockClear());
