@@ -10,7 +10,7 @@ const SERVER_URI = 'http://localhost:3000';
 const DATA_API_URI = `${SERVER_URI}/graphql`;
 
 // Initialize client cache
-const cache = new InMemoryCache();
+export const cache = new InMemoryCache();
 
 // Initialize Apollo Links
 const deepDedupLink = new DeepDedupLink({
