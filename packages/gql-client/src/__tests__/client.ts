@@ -57,24 +57,26 @@ const declareCacheMocks = (): MockDeclaration[] => {
 
 describe('Client', () => {
     const cache = new InMemoryCache();
-    const fetch = fetcher.fetch;
 
     // initialize mocks for spying functions
     const cacheMockDeclarations: MockDeclaration[] = declareCacheMocks();
     const cacheMocks: jest.SpyInstance<any>[] = cacheMockDeclarations.map(declaration =>
         jest.spyOn(cache, declaration.name as any),
     );
+    const fetchMock: jest.SpyInstance<any> = jest.spyOn(fetcher, 'fetch');
 
     // initialize client
-    const client = createClient(cache, fetch);
+    const client = createClient(cache, fetcher.fetch);
 
     beforeEach(() => {
         cacheMocks.forEach(mock => mock.mockClear());
+        fetchMock.mockClear();
     });
 
     let testIndex = 1;
     afterEach(() => {
         reportCacheStatus(testIndex, cacheMockDeclarations, cacheMocks, false);
+        reportFetchStatus(testIndex, fetchMock);
         testIndex++;
     });
 
@@ -154,4 +156,27 @@ const reportCacheStatus = (
     console.log(`TEST ${textIndex} Cache Status:
         ${report}
     `);
+};
+
+const reportFetchStatus = (
+    textIndex: number,
+    fetchMock: jest.SpyInstance<any>,
+) => {
+    const hasBeenCalled = fetchMock.mock.calls.length > 0;
+    const uri = hasBeenCalled ? fetchMock.mock.calls[0][0] : '';
+    const query = hasBeenCalled ? fetchMock.mock.calls[0][1].body : '';
+
+    const report = hasBeenCalled ? `Network request has been issued to ${uri}
+        Query Body:
+
+        ${prettyStringifyJSON(JSON.parse(query))}
+        `
+        :
+        `No network request has been issued.`;
+
+
+    console.log(`TEST ${textIndex} Network Fetch Status:
+
+${ report}
+`);
 };
