@@ -1,5 +1,9 @@
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloQueryResult, OperationVariables, QueryOptions } from 'apollo-client';
+import {
+    ApolloQueryResult,
+    OperationVariables,
+    QueryOptions,
+} from 'apollo-client';
 import * as fetcher from 'cross-fetch';
 import { print } from 'graphql';
 import 'jest';
