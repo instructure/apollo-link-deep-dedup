@@ -63,7 +63,7 @@ export class DeepDedupLink extends ApolloLink {
     private deduplicateQuery = (operation: Operation): Operation => {
         /*
         * 07/13/2018 @leontaolong:
-        * Rewrite query operation name for testing query rewriting purposes
+        * Rewrite query operation name for testing query rewriting monitoring
         */
         const name = {
             kind: 'Name',

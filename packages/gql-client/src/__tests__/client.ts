@@ -71,17 +71,12 @@ describe('Client', () => {
         fetchMock.mockClear();
     });
 
-<<<<<<< HEAD
-    let testIndex = 0;
-=======
     let testIndex = 1;
     const queries: QueryOptions<OperationVariables>[] = [];
-
->>>>>>> Add tests that verify query rewriting
     afterEach(() => {
         reportCacheStatus(testIndex, CACHE_MOCK_DECLARATIONS, cacheMocks, false);
         reportFetchStatus(testIndex, fetchMock);
-        reportQueryRewriting(testIndex, fetchMock, queries[testIndex - 1]);
+        reportQueryRewriting(testIndex, fetchMock, queries[testIndex]);
         testIndex++;
     });
 
@@ -202,7 +197,7 @@ const reportFetchStatus = (
 };
 
 const reportQueryRewriting = (
-    textIndex: number,
+    testIndex: number,
     fetchMock: jest.SpyInstance<any>,
     initialQuery: QueryOptions<OperationVariables>,
 ) => {
@@ -210,7 +205,7 @@ const reportQueryRewriting = (
     let report = '';
 
     if (!hasBeenCalled || !initialQuery) {
-        report += 'No Status: either no network request issued or not a query.';
+        report += 'No Status: either no network request issued or not a query operation.';
     } else {
         const receivedQuery = removeTypename(fetchMock.mock.calls[0][1].body);
         const receivedQueryString = JSON.parse(receivedQuery).query;
@@ -228,7 +223,7 @@ const reportQueryRewriting = (
             Rewritten Query:
             ${receivedQueryString}`;
     }
-    console.log(`TEST ${textIndex} Query Rewriting Status:
+    console.log(`TEST ${testIndex + 1} Query Rewriting Status:
 
         ${report}
     `);
