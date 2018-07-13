@@ -71,7 +71,7 @@ describe('Client', () => {
         fetchMock.mockClear();
     });
 
-    let testIndex = 1;
+    let testIndex = 0;
     const queries: QueryOptions<OperationVariables>[] = [];
     afterEach(() => {
         reportCacheStatus(testIndex, CACHE_MOCK_DECLARATIONS, cacheMocks, false);
