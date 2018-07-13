@@ -180,3 +180,29 @@ const reportFetchStatus = (
         ${report}
     `);
 };
+
+const reportFetchStatus = (
+    textIndex: number,
+    fetchMock: jest.SpyInstance<any>,
+) => {
+    const hasBeenCalled = fetchMock.mock.calls.length > 0;
+    const uri = hasBeenCalled ? fetchMock.mock.calls[0][0] : '';
+    const query = hasBeenCalled ? fetchMock.mock.calls[0][1].body : '';
+
+    const report = hasBeenCalled ?
+        `Network request has been issued to ${uri}
+        Query Body:
+
+        ${prettyStringifyJSON(JSON.parse(query))}
+        Formatted query field:
+
+        ${JSON.parse(query).query}
+        `
+        :
+        `No network request has been issued.`;
+
+    console.log(`TEST ${textIndex} Network Fetch Status:
+
+        ${report}
+    `);
+};
