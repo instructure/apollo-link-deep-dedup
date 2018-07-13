@@ -22,46 +22,43 @@ interface MockDeclaration {
     defaultCalledTimes: number;
 }
 
-const declareCacheMocks = (): MockDeclaration[] => {
-    return [
-        {
-            name: 'read',
-            defaultCalledTimes: 1,
-        },
-        {
-            name: 'write',
-            defaultCalledTimes: 1,
-        },
-        {
-            name: 'readQuery',
-            defaultCalledTimes: 0,
-        },
-        {
-            name: 'writeQuery',
-            defaultCalledTimes: 0,
-        },
-        {
-            name: 'readFragment',
-            defaultCalledTimes: 0,
-        },
-        {
-            name: 'writeFragment',
-            defaultCalledTimes: 0,
-        },
-        {
-            name: 'diff',
-            defaultCalledTimes: 2,
-        },
-    ];
-};
+const CACHE_MOCK_DECLARATIONS: MockDeclaration[] = [
+    {
+        name: 'read',
+        defaultCalledTimes: 1,
+    },
+    {
+        name: 'write',
+        defaultCalledTimes: 1,
+    },
+    {
+        name: 'readQuery',
+        defaultCalledTimes: 0,
+    },
+    {
+        name: 'writeQuery',
+        defaultCalledTimes: 0,
+    },
+    {
+        name: 'readFragment',
+        defaultCalledTimes: 0,
+    },
+    {
+        name: 'writeFragment',
+        defaultCalledTimes: 0,
+    },
+    {
+        name: 'diff',
+        defaultCalledTimes: 2,
+    },
+];
 
 describe('Client', () => {
     const cache = new InMemoryCache();
     const fetch = fetcher.fetch;
 
     // initialize mocks for spying functions
-    const cacheMockDeclarations: MockDeclaration[] = declareCacheMocks();
-    const cacheMocks: jest.SpyInstance<any>[] = cacheMockDeclarations.map(declaration =>
+    const cacheMocks: jest.SpyInstance<any>[] = CACHE_MOCK_DECLARATIONS.map(declaration =>
         jest.spyOn(cache, declaration.name as any),
     );
 
@@ -74,7 +71,7 @@ describe('Client', () => {
 
     let testIndex = 1;
     afterEach(() => {
-        reportCacheStatus(testIndex, cacheMockDeclarations, cacheMocks, false);
+        reportCacheStatus(testIndex, CACHE_MOCK_DECLARATIONS, cacheMocks, false);
         testIndex++;
     });
 
