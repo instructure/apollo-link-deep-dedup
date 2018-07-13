@@ -1,6 +1,7 @@
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloQueryResult } from 'apollo-client';
+import { ApolloQueryResult, OperationVariables, QueryOptions } from 'apollo-client';
 import * as fetcher from 'cross-fetch';
+import { print } from 'graphql';
 import 'jest';
 
 import createClient from '../apolloClient';
@@ -70,37 +71,52 @@ describe('Client', () => {
         fetchMock.mockClear();
     });
 
+<<<<<<< HEAD
     let testIndex = 0;
+=======
+    let testIndex = 1;
+    const queries: QueryOptions<OperationVariables>[] = [];
+
+>>>>>>> Add tests that verify query rewriting
     afterEach(() => {
         reportCacheStatus(testIndex, CACHE_MOCK_DECLARATIONS, cacheMocks, false);
         reportFetchStatus(testIndex, fetchMock);
+        reportQueryRewriting(testIndex, fetchMock, queries[testIndex - 1]);
         testIndex++;
     });
 
     it('fetches all authors', async () => {
-        const result: ApolloQueryResult<any> = await client.query(fetchAllAuthors());
+        const query = fetchAllAuthors();
+        const result: ApolloQueryResult<any> = await client.query(query);
         const authors: Author[] = result.data.authors;
         expect(authors).toMatchSnapshot();
+        queries.push(query);
     });
 
     it('fetches all posts', async () => {
-        const result: ApolloQueryResult<any> = await client.query(fetchAllPosts());
+        const query = fetchAllPosts();
+        const result: ApolloQueryResult<any> = await client.query(query);
         const posts: Post[] = result.data.posts;
         expect(posts).toMatchSnapshot();
+        queries.push(query);
     });
 
     it('fetches author by id', async () => {
         const authorId = 1;
-        const result: ApolloQueryResult<any> = await client.query(fetchAuthorById(authorId));
+        const query = fetchAuthorById(authorId);
+        const result: ApolloQueryResult<any> = await client.query(query);
         const author: Author = result.data.author;
         expect(author).toMatchSnapshot();
+        queries.push(query);
     });
 
     it('fetches post by id', async () => {
         const postId = 1;
-        const result: ApolloQueryResult<any> = await client.query(fetchPostById(postId));
+        const query = fetchPostById(postId);
+        const result: ApolloQueryResult<any> = await client.query(query);
         const post: Post = result.data.post;
         expect(post).toHaveProperty('id', postId);
+        queries.push(query);
     });
 
     it('upvotes post by post id', async () => {
@@ -118,6 +134,8 @@ describe('Client', () => {
 });
 
 const prettyStringifyJSON = (obj: Object) => JSON.stringify(obj, null, 2); // spacing level = 2;
+
+const removeTypename = (queryString: string) => queryString.replace(/\s+__typename\\n/g, '');
 
 /* tslint:disable:no-console
  * for status info logging
@@ -178,6 +196,40 @@ const reportFetchStatus = (
 
     // 1-indexed for reporting purposes
     console.log(`TEST ${testIndex + 1} Network Fetch Status:
+
+        ${report}
+    `);
+};
+
+const reportQueryRewriting = (
+    textIndex: number,
+    fetchMock: jest.SpyInstance<any>,
+    initialQuery: QueryOptions<OperationVariables>,
+) => {
+    const hasBeenCalled = fetchMock.mock.calls.length > 0;
+    let report = '';
+
+    if (!hasBeenCalled || !initialQuery) {
+        report += 'No Status: either no network request issued or not a query.';
+    } else {
+        const receivedQuery = removeTypename(fetchMock.mock.calls[0][1].body);
+        const receivedQueryString = JSON.parse(receivedQuery).query;
+        const initialQueryString = print(initialQuery.query);
+
+        const equal = initialQueryString === receivedQueryString;
+
+        report += equal ?
+            `Query has not been rewritten.`
+            :
+            `Query has been rewritten:
+
+            Initial Query:
+            ${initialQueryString}
+
+            Rewritten Query:
+            ${receivedQueryString}`;
+    }
+    console.log(`TEST ${textIndex} Query Rewriting Status:
 
         ${report}
     `);
