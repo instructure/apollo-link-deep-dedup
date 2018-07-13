@@ -223,6 +223,8 @@ const reportQueryRewriting = (
             Rewritten Query:
             ${receivedQueryString}`;
     }
+
+    // 1-indexed for reporting purposes
     console.log(`TEST ${testIndex + 1} Query Rewriting Status:
 
         ${report}
