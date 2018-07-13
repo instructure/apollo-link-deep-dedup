@@ -69,7 +69,7 @@ describe('Client', () => {
         cacheMocks.forEach(mock => mock.mockClear());
     });
 
-    let testIndex = 1;
+    let testIndex = 0;
     afterEach(() => {
         reportCacheStatus(testIndex, CACHE_MOCK_DECLARATIONS, cacheMocks, false);
         testIndex++;
@@ -121,7 +121,7 @@ const prettyStringifyJSON = (obj: Object) => JSON.stringify(obj, null, 2); // sp
  * for status info logging
  */
 const reportCacheStatus = (
-    textIndex: number,
+    testIndex: number,
     mockDeclarations: MockDeclaration[],
     cacheMocks: jest.SpyInstance<any>[],
     verbose: boolean, // full inspection of mock
@@ -148,7 +148,8 @@ const reportCacheStatus = (
         return results;
     }, '');
 
-    console.log(`TEST ${textIndex} Cache Status:
+    // 1-indexed for reporting purposes
+    console.log(`TEST ${testIndex + 1} Cache Status:
         ${report}
     `);
 };
