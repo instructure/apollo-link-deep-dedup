@@ -70,7 +70,7 @@ describe('Client', () => {
         fetchMock.mockClear();
     });
 
-    let testIndex = 1;
+    let testIndex = 0;
     afterEach(() => {
         reportCacheStatus(testIndex, CACHE_MOCK_DECLARATIONS, cacheMocks, false);
         reportFetchStatus(testIndex, fetchMock);
@@ -123,7 +123,7 @@ const prettyStringifyJSON = (obj: Object) => JSON.stringify(obj, null, 2); // sp
  * for status info logging
  */
 const reportCacheStatus = (
-    textIndex: number,
+    testIndex: number,
     mockDeclarations: MockDeclaration[],
     cacheMocks: jest.SpyInstance<any>[],
     verbose: boolean, // full inspection of mock
@@ -150,13 +150,14 @@ const reportCacheStatus = (
         return results;
     }, '');
 
-    console.log(`TEST ${textIndex} Cache Status:
+    // 1-indexed for reporting purposes
+    console.log(`TEST ${testIndex + 1} Cache Status:
         ${report}
     `);
 };
 
 const reportFetchStatus = (
-    textIndex: number,
+    testIndex: number,
     fetchMock: jest.SpyInstance<any>,
 ) => {
     const hasBeenCalled = fetchMock.mock.calls.length > 0;
@@ -175,7 +176,8 @@ const reportFetchStatus = (
         :
         `No network request has been issued.`;
 
-    console.log(`TEST ${textIndex} Network Fetch Status:
+    // 1-indexed for reporting purposes
+    console.log(`TEST ${testIndex + 1} Network Fetch Status:
 
         ${report}
     `);
