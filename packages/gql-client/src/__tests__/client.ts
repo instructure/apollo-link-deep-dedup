@@ -135,6 +135,7 @@ describe('Client', () => {
 
 const prettyStringifyJSON = (obj: Object) => JSON.stringify(obj, null, 2); // spacing level = 2;
 
+// remove __typename field, which is added by Apollo, from query string
 const removeTypename = (queryString: string) => queryString.replace(/\s+__typename\\n/g, '');
 
 /* tslint:disable:no-console
@@ -189,8 +190,7 @@ const reportFetchStatus = (
         ${prettyStringifyJSON(JSON.parse(query))}
         Formatted query field:
 
-        ${JSON.parse(query).query}
-        `
+        ${JSON.parse(query).query}`
         :
         `No network request has been issued.`;
 
@@ -217,7 +217,6 @@ const reportQueryRewriting = (
         const initialQueryString = print(initialQuery.query);
 
         const equal = initialQueryString === receivedQueryString;
-
         report += equal ?
             `Query has not been rewritten.`
             :
