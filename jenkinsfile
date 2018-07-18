@@ -4,17 +4,17 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                echo 'Building....'
                 sh 'npm install && npm start && npm build'
             }
         }
         stage('Test') {
             steps {
-                echo 'Running linter..'
+                echo 'Running linter...'
                 sh 'npm run lint'
             }
             steps {
-                echo 'Testing..'
+                echo 'Testing...'
                 sh 'npm run test'
             }
         }
