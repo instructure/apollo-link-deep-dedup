@@ -30,7 +30,7 @@ pipeline {
         }
     }
     post {
-        GIT_COMMITTER = sh (script: "git show -s --format='%%an' HEAD", returnStdout: true).split('\r\n')[2].trim()
+        GIT_COMMITTER = $(git show -s --pretty=%an)
         success {
             slackSend (
                 channel: CHANNEL_NAME,
