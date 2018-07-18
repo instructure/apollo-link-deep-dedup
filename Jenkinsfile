@@ -6,7 +6,7 @@ pipeline {
         }
     }
     stages {
-        stage('Checkout'){
+        stage('Checkout') {
             steps {
                 echo 'Checking out commit....'
                 checkout scm
@@ -36,6 +36,7 @@ pipeline {
                 color: '#00FF00',
                 message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :ok:"
             )
+        }
 
         failure {
             slackSend (
