@@ -35,7 +35,7 @@ pipeline {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${}) :happystar:"
+                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${GIT_COMMITTER}) :happystar:"
             )
         }
 
