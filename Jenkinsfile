@@ -34,19 +34,19 @@ pipeline {
         success {
             sh '. $WORKSPACE/envvars'
             echo '${env.committer}'
-            // slackSend (
-            //     channel: CHANNEL_NAME,
-            //     color: 'good',
-            //     message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${env.GIT_COMMITTER}) :happystar:"
-            // )
+            slackSend (
+                channel: CHANNEL_NAME,
+                color: 'good',
+                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${env.GIT_COMMITTER}) :happystar:"
+            )
         }
 
         failure {
-            // slackSend (
-            //     channel: CHANNEL_NAME,
-            //     color: 'danger',
-            //     message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :u7981:"
-            // )
+            slackSend (
+                channel: CHANNEL_NAME,
+                color: 'danger',
+                message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :u7981:"
+            )
         }
     }
 }
