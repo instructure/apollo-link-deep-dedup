@@ -1,4 +1,4 @@
-CHANNEL_NAME = '#new_jenkins_noisy'
+CHANNEL_NAME = '#jenkins-test'
 pipeline {
     agent {
         docker {
@@ -6,13 +6,12 @@ pipeline {
         }
     }
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out commit....'
-                checkout scm
-                sh 'committer=$(git show -s --pretty=%an) && echo "committer=\"$committer\"" > $WORKSPACE/envvars'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         echo 'Checking out commit....'
+        //         checkout scm
+        //     }
+        // }
 
         stage('Build') {
             steps {
