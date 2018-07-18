@@ -26,7 +26,7 @@ pipeline {
                 echo 'Running linter...'
                 sh 'npm run lint'
                 echo 'Testing...'
-                sh 'npm run start & npm run '
+                sh 'npm run start & npm ru '
             }
         }
     }
