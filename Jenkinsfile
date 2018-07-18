@@ -2,6 +2,14 @@ pipeline {
     agent any
 
     stages {
+        stage('Setup') {
+            steps {
+                echo 'setting up....'
+                sh 'sudo apt-get update && sudo apt-get -y upgrade'
+                sh 'curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -'
+                sh 'sudo apt-get install -y nodejs'
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building....'
