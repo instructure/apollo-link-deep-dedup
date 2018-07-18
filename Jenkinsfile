@@ -10,6 +10,7 @@ pipeline {
             steps {
                 echo 'Checking out commit....'
                 checkout scm
+                sh 'GIT_COMMITTER=$(git show -s --pretty=%an'
             }
         }
 
@@ -30,7 +31,6 @@ pipeline {
         }
     }
     post {
-        sh 'GIT_COMMITTER=$(git show -s --pretty=%an'
         success {
             slackSend (
                 channel: CHANNEL_NAME,
