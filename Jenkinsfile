@@ -12,8 +12,6 @@ pipeline {
             steps {
                 echo 'Running linter...'
                 sh 'npm run lint'
-            }
-            steps {
                 echo 'Testing...'
                 sh 'npm run test'
             }
