@@ -1,4 +1,5 @@
 pipeline {
+    CHANNEL_NAME = '#new_jenkins_noisy'
     agent {
         docker {
             image 'node:8-alpine'
@@ -8,13 +9,6 @@ pipeline {
         stage('Checkout'){
             steps {
                 echo 'Checking out commit....'
-                slackSend (
-                    channel: '#new_jenkins_noisy',
-                    color: 'good',
-                    message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-                    teamDomain: 'beedemo',
-                    token: 'token'
-                )
                 checkout scm
             }
         }
@@ -33,6 +27,22 @@ pipeline {
                 echo 'Testing...'
                 sh 'npm run start & npm run test'
             }
+        }
+    }
+    post {
+        success {
+            slackSend (
+                channel: CHANNEL_NAME
+                color: '#00FF00',
+                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :ok:"
+            )
+
+        failure {
+            slackSend (
+                channel: CHANNEL_NAME
+                color: '#FF0000',
+                message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :u7981:"
+            )
         }
     }
 }
