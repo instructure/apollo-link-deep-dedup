@@ -1,5 +1,6 @@
+CHANNEL_NAME = '#new_jenkins_noisy'
+
 pipeline {
-    CHANNEL_NAME = '#new_jenkins_noisy'
     agent {
         docker {
             image 'node:8-alpine'
