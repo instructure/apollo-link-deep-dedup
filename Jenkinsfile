@@ -6,13 +6,6 @@ pipeline {
         }
     }
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         echo 'Checking out commit....'
-        //         checkout scm
-        //     }
-        // }
-
         stage('Build') {
             steps {
                 echo 'Building....'
@@ -31,8 +24,6 @@ pipeline {
     }
     post {
         success {
-            sh '. $WORKSPACE/envvars'
-            echo '${env.committer}'
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
