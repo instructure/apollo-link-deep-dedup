@@ -1,4 +1,6 @@
 CHANNEL_NAME = '#jenkins-test'
+committerName = ''
+
 pipeline {
     agent {
         docker {
@@ -24,6 +26,7 @@ pipeline {
     }
     post {
         success {
+            echo sh(returnStdout: true, script: 'env')
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
