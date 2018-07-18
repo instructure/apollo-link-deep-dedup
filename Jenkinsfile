@@ -1,5 +1,4 @@
 CHANNEL_NAME = '#new_jenkins_noisy'
-
 pipeline {
     agent {
         docker {
@@ -26,7 +25,7 @@ pipeline {
                 echo 'Running linter...'
                 sh 'npm run lint'
                 echo 'Testing...'
-                sh 'npm run start & npm ru '
+                sh 'npm run start & npm run test'
             }
         }
     }
@@ -35,7 +34,7 @@ pipeline {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :happystar:"
+                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${env.GIT_COMMITTER_NAME}) :happystar:"
             )
         }
 
