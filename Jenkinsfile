@@ -30,12 +30,12 @@ pipeline {
         }
     }
     post {
-        GIT_COMMITTER = $(git show -s --pretty=%an)
+        sh 'GIT_COMMITTER=$(git show -s --pretty=%an'
         success {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${$(git show -s --pretty=%an)}) :happystar:"
+                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${env.GIT_COMMITTER}) :happystar:"
             )
         }
 
