@@ -8,6 +8,13 @@ pipeline {
         stage('Checkout'){
             steps {
                 echo 'Checking out commit....'
+                slackSend (
+                    channel: '#new_jenkins_noisy',
+                    color: 'good',
+                    message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
+                    teamDomain: 'beedemo',
+                    token: 'token'
+                )
                 checkout scm
             }
         }
