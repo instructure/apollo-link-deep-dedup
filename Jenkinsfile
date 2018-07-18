@@ -10,7 +10,7 @@ pipeline {
             steps {
                 echo 'Checking out commit....'
                 checkout scm
-                sh 'GIT_COMMITTER=$(/usr/bin/git show -s --pretty=%an)'
+                sh 'committer=$(git show -s --pretty=%an) && echo "committer=\"$committer\"" > $WORKSPACE/envvars'
             }
         }
 
@@ -32,19 +32,21 @@ pipeline {
     }
     post {
         success {
-            slackSend (
-                channel: CHANNEL_NAME,
-                color: 'good',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${env.GIT_COMMITTER}) :happystar:"
-            )
+            sh '. $WORKSPACE/envvars'
+            echo '${env.committer}'
+            // slackSend (
+            //     channel: CHANNEL_NAME,
+            //     color: 'good',
+            //     message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${env.GIT_COMMITTER}) :happystar:"
+            // )
         }
 
         failure {
-            slackSend (
-                channel: CHANNEL_NAME,
-                color: 'danger',
-                message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :u7981:"
-            )
+            // slackSend (
+            //     channel: CHANNEL_NAME,
+            //     color: 'danger',
+            //     message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :u7981:"
+            // )
         }
     }
 }
