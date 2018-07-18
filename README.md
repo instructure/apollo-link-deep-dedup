@@ -54,11 +54,14 @@ In the root directory of this repo:
 
 ```shell
 npm install
+npm start
 ```
+
+This will install all dependencies for each package.
 
 Useful commands (__in the root directory__):
 
 - `npm run push`: makes sure git is clean, runs linter and `git-push` to the remote origin of the current branch (__note:__ direct push to master is prohibited)
-- `npm run test`: runs all tests in all packages
+- `npm test`: runs all tests in all packages
 - `npm run build`: creates builds for all packages
 - `npm run clean`: cleans up all build and compiled artifacts across all packages
