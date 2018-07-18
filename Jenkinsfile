@@ -10,7 +10,7 @@ pipeline {
             steps {
                 echo 'Checking out commit....'
                 checkout scm
-                sh 'GIT_COMMITTER=$(git show -s --pretty=%an)'
+                sh 'GIT_COMMITTER=$(/usr/bin/git show -s --pretty=%an)'
             }
         }
 
