@@ -26,7 +26,7 @@ pipeline {
                 echo 'Running linter...'
                 sh 'npm run lint'
                 echo 'Testing...'
-                sh 'npm run start & npm run test'
+                sh 'npm run start & npm run '
             }
         }
     }
@@ -35,7 +35,7 @@ pipeline {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :ok:"
+                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :happystar:"
             )
         }
 
