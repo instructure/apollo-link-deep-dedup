@@ -2,13 +2,18 @@
     "name": "graphql-deep-dedup",
     "description": "An Apollo Link library and test harness (GraphQL client and server) for GraphQL deduplication.",
     "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/instructure/apollo-link-deep-dedup.git"
+    },
     "scripts": {
-        "start": "lerna bootstrap",
+        "bootstrap": "lerna bootstrap",
         "lint-fix": "lerna run -- lint-fix",
         "lint": "lerna run -- lint",
         "test": "lerna run -- test",
         "clean": "lerna run -- clean",
-        "build": "lerna run -- build",
+        "build": "lerna run --scope apollo-link-deep-dedup build && lerna run --ignore apollo-link-deep-dedup build",
+        "start": "lerna run --parallel start",
         "prepush": "test -z \"$(git status --porcelain)\" || (echo \"Respository is dirty.\"; exit 1) && npm run lint && npm run test",
         "printDir": "npm run clean && tree -v --charset utf-8 -I node_modules",
         "push": "git push origin $(git rev-parse --abbrev-ref HEAD)"

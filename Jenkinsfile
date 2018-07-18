@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Checkout'){
             steps {
-                echo 'Checking out branch....'
+                echo 'Checking out commit....'
                 checkout scm
             }
         }
@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building....'
-                sh 'npm install && npm start && npm build'
+                sh 'npm install && npm run bootstrap && npm run build'
             }
         }
 
@@ -24,7 +24,7 @@ pipeline {
                 echo 'Running linter...'
                 sh 'npm run lint'
                 echo 'Testing...'
-                sh 'npm run test'
+                sh 'npm run start & npm run test'
             }
         }
     }

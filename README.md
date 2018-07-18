@@ -54,6 +54,7 @@ In the root directory of this repo:
 
 ```shell
 npm install
+npm bootstrap
 npm start
 ```
 
