@@ -1,4 +1,4 @@
-CHANNEL_NAME = '#jenkins-test'
+CHANNEL_NAME = '#pandalytics-cr'
 committerName = ''
 
 pipeline {
@@ -29,7 +29,7 @@ pipeline {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :happystar:"
+                message: "SUCCEEDED: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) :happystar:"
             )
         }
 
@@ -37,7 +37,7 @@ pipeline {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'danger',
-                message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :u7981:"
+                message: "FAILED: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) :u7981:"
             )
         }
     }
