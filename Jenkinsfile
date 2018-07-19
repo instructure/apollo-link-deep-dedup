@@ -12,10 +12,6 @@ pipeline {
             steps {
                 echo 'Building....'
                 sh 'npm install && npm run bootstrap && npm run build'
-                script {
-                    committerName = sh (returnStdout: true, script: '/usr/bin/git log -1 --pretty=format:\'%an\'')
-                    echo committerName
-                }
             }
         }
 
@@ -33,7 +29,7 @@ pipeline {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) by (${env.GIT_COMMITTER}) :happystar:"
+                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) :happystar:"
             )
         }
 
