@@ -13,9 +13,9 @@ pipeline {
                 sh 'npm install && npm run bootstrap && npm run build'
             }
         }
-        stage('Run linter') {
+        stage('Run Linter') {
             steps {
-                echo 'Running linter...'
+                echo 'Running Linter...'
                 sh 'npm run lint'
             }
         }
