@@ -65,4 +65,4 @@ Useful commands (__in the root directory__):
 - `npm test`: runs all tests in all packages
 - `npm run build`: creates builds for all packages
 - `npm run clean`: cleans up all build and compiled artifacts across all packages
-- `npm start`: start gql-server
+- `npm start`: starts gql-server
