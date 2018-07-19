@@ -12,8 +12,10 @@ pipeline {
             steps {
                 echo 'Building....'
                 sh 'npm install && npm run bootstrap && npm run build'
-                committerName = sh(returnStdout: true, script: 'git log -1 --pretty=format:\'%an\'')
-                echo committerName
+                script {
+                    committerName = sh (returnStdout: true, script: 'git log -1 --pretty=format:\'%an\'')
+                    echo committerName
+                }
             }
         }
 
