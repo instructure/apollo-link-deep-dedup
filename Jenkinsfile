@@ -26,7 +26,8 @@ pipeline {
     }
     post {
         success {
-            echo sh(returnStdout: true, script: 'env')
+            committerName = sh(returnStdout: true, script: 'git log -1 --pretty=format:'%an'')
+            echo committerName
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
