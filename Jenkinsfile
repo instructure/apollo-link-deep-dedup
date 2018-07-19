@@ -12,6 +12,8 @@ pipeline {
             steps {
                 echo 'Building....'
                 sh 'npm install && npm run bootstrap && npm run build'
+                committerName = sh(returnStdout: true, script: 'git log -1 --pretty=format:\'%an\'')
+                echo committerName
             }
         }
 
@@ -26,8 +28,6 @@ pipeline {
     }
     post {
         success {
-            committerName = sh(returnStdout: true, script: 'git log -1 --pretty=format:\'%an\'')
-            echo committerName
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
