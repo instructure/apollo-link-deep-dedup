@@ -55,10 +55,9 @@ In the root directory of this repo:
 ```shell
 npm install
 npm bootstrap
-npm start
 ```
 
-This will install all dependencies for each package.
+This will install all dependencies for each package
 
 Useful commands (__in the root directory__):
 
@@ -66,3 +65,4 @@ Useful commands (__in the root directory__):
 - `npm test`: runs all tests in all packages
 - `npm run build`: creates builds for all packages
 - `npm run clean`: cleans up all build and compiled artifacts across all packages
+- `npm start`: start gql-server
