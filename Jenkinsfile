@@ -1,5 +1,4 @@
 CHANNEL_NAME = '#pandalytics-cr'
-committerName = ''
 
 pipeline {
     agent {
@@ -14,7 +13,6 @@ pipeline {
                 sh 'npm install && npm run bootstrap && npm run build'
             }
         }
-
         stage('Test') {
             steps {
                 echo 'Running linter...'
@@ -32,7 +30,6 @@ pipeline {
                 message: "SUCCEEDED: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) :happystar:"
             )
         }
-
         failure {
             slackSend (
                 channel: CHANNEL_NAME,
