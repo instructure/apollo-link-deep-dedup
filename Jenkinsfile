@@ -13,10 +13,14 @@ pipeline {
                 sh 'npm install && npm run bootstrap && npm run build'
             }
         }
-        stage('Test') {
+        stage('Run linter') {
             steps {
                 echo 'Running linter...'
                 sh 'npm run lint'
+            }
+        }
+        stage('Test') {
+            steps {
                 echo 'Testing...'
                 sh 'npm run start & npm run test'
             }
