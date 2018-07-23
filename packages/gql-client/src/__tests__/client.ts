@@ -70,52 +70,51 @@ describe('Client', () => {
     // initialize client
     const client = createClient(cache, fetcher.fetch);
 
+    let query = null;
     beforeEach(() => {
         cacheMocks.forEach(mock => mock.mockClear());
         fetchMock.mockClear();
+        query = null; // reset query to null after each test
     });
 
     let testIndex = 0;
-    const queries: QueryOptions<OperationVariables>[] = [];
     afterEach(() => {
         reportCacheStatus(testIndex, CACHE_MOCK_DECLARATIONS, cacheMocks, false);
         reportFetchStatus(testIndex, fetchMock);
-        reportQueryRewriting(testIndex, fetchMock, queries[testIndex]);
+        if (query !== null) { // if query has been assigned in the test, report query rewrite status
+            reportQueryRewriting(testIndex, fetchMock, query);
+        }
         testIndex++;
     });
 
     it('fetches all authors', async () => {
-        const query = fetchAllAuthors();
+        query = fetchAllAuthors();
         const result: ApolloQueryResult<any> = await client.query(query);
         const authors: Author[] = result.data.authors;
         expect(authors).toMatchSnapshot();
-        queries.push(query);
     });
 
     it('fetches all posts', async () => {
-        const query = fetchAllPosts();
+        query = fetchAllPosts();
         const result: ApolloQueryResult<any> = await client.query(query);
         const posts: Post[] = result.data.posts;
         expect(posts).toMatchSnapshot();
-        queries.push(query);
     });
 
     it('fetches author by id', async () => {
         const authorId = 1;
-        const query = fetchAuthorById(authorId);
+        query = fetchAuthorById(authorId);
         const result: ApolloQueryResult<any> = await client.query(query);
         const author: Author = result.data.author;
         expect(author).toMatchSnapshot();
-        queries.push(query);
     });
 
     it('fetches post by id', async () => {
         const postId = 1;
-        const query = fetchPostById(postId);
+        query = fetchPostById(postId);
         const result: ApolloQueryResult<any> = await client.query(query);
         const post: Post = result.data.post;
         expect(post).toHaveProperty('id', postId);
-        queries.push(query);
     });
 
     it('upvotes post by post id', async () => {
