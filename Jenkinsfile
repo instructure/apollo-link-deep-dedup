@@ -33,14 +33,14 @@ pipeline {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'good',
-                message: "SUCCEEDED: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) (${SUCCEEDED_EMOJI})"
+                message: "SUCCEEDED: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) ${SUCCEEDED_EMOJI}"
             )
         }
         failure {
             slackSend (
                 channel: CHANNEL_NAME,
                 color: 'danger',
-                message: "FAILED: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) (${FAILED_EMOJI})"
+                message: "FAILED: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) ${FAILED_EMOJI}"
             )
         }
     }
