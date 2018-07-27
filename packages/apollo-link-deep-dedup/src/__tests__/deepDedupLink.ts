@@ -42,7 +42,7 @@ describe('DeepDedupLink', () => {
     });
 
     it(`bypasses deduplication as desired`, async () => {
-        const newRequest = request;
+        const newRequest = Object.assign({}, request);
         // add forceFetch rule
         newRequest.context = {
             forceFetch: true,
@@ -58,7 +58,7 @@ describe('DeepDedupLink', () => {
                 });
             }),
         ]);
-        execute(link, request);
+        execute(link, newRequest);
     });
 
     it(`unsubscribes as needed`, () => {
@@ -79,5 +79,33 @@ describe('DeepDedupLink', () => {
         sub.unsubscribe();
         // assert
         expect(unsubscribed).toBe(true);
+    });
+
+    it(`accesses cache`, () => {
+        const cache = new InMemoryCache();
+        // list of cache access functions,
+        // which will be specifically determined based on actual implementation later
+        const mockFuncNames = ['read', 'diff', 'readQuery', 'readFragment', 'extract'];
+        const cacheMocks: jest.SpyInstance<any>[] = mockFuncNames.map(funcName =>
+            jest.spyOn(cache, funcName as any),
+        );
+        const link = ApolloLink.from([
+            new DeepDedupLink({ cache: cache }),
+            new ApolloLink(() => {
+                let toHaveBeenCalled = false;
+                // inspect mocks in the following link
+                cacheMocks.forEach(mockFunc => {
+                    if (mockFunc.mock.calls.length > 0) {
+                        toHaveBeenCalled = true;
+                    }
+                });
+                // assert
+                expect(toHaveBeenCalled).toBe(true);
+                return new Observable(observer => {
+                    observer.complete();
+                });
+            }),
+        ]);
+        execute(link, request);
     });
 });
