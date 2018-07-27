@@ -61,6 +61,16 @@ export class DeepDedupLink extends ApolloLink {
      * @returns {Operation} a query-deduplicated operation
      */
     private deduplicateQuery = (operation: Operation): Operation => {
+        /*
+        * 07/13/2018 @leontaolong:
+        * Rewrite query operation name for testing query rewriting monitoring
+        */
+        const name = {
+            kind: 'Name',
+            value: 'pandalytics_is_ready_for_launch',
+        };
+        // rewrite operation name
+        (operation.query.definitions[0] as any).name = name;
         return operation;
     }
 
