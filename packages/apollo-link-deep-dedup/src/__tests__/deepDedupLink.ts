@@ -61,6 +61,33 @@ describe('DeepDedupLink', () => {
         execute(link, newRequest);
     });
 
+    it(`bypasses non-query operations`, async () => {
+        const mutationDocument: DocumentNode = gql`
+        mutation test1($x: String) {
+            test(x: $x) {
+                id
+            }
+        }`;
+
+        const mutationVariables = { x: 'Hello World' };
+        const mutationRequest: GraphQLRequest = {
+            query: mutationDocument,
+            variables: mutationVariables,
+        };
+        const link = ApolloLink.from([
+            new DeepDedupLink({ cache: new InMemoryCache() }),
+            new ApolloLink((operation) => {
+                // assert that query has not been modified
+                expect(operation.variables).toBe(mutationRequest.variables);
+                expect(operation.query).toBe(mutationRequest.query);
+                return new Observable(observer => {
+                    observer.complete();
+                });
+            }),
+        ]);
+        execute(link, mutationRequest);
+    });
+
     it(`unsubscribes as needed`, () => {
         let unsubscribed = false;
         const link = ApolloLink.from([
