@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import { isQueryOperation } from '../utils';
 
 describe('isQueryOperation', () => {
-    it(`returns true with query operation`, async () => {
+    it(`returns true with query operation`, () => {
         const queryDocument: DocumentNode = gql`
             query test1($x: String) {
                 test(x: $x)
@@ -15,11 +15,11 @@ describe('isQueryOperation', () => {
                 test(x: x)
             }`;
 
-        expect(isQueryOperation(queryDocument)).toBeTruthy();
-        expect(isQueryOperation(anonymousQueryDocument)).toBeTruthy();
+        expect(isQueryOperation(queryDocument)).toBe(true);
+        expect(isQueryOperation(anonymousQueryDocument)).toBe(true);
     });
 
-    it(`returns false with non-query operation`, async () => {
+    it(`returns false with non-query operation`, () => {
         const mutationDocument: DocumentNode = gql`
             mutation test1($x: String) {
                 test(x: $x)
@@ -29,7 +29,7 @@ describe('isQueryOperation', () => {
                 test(x: $x)
             }`;
 
-        expect(isQueryOperation(mutationDocument)).toBeFalsy();
-        expect(isQueryOperation(subscriptionDocument)).toBeFalsy();
+        expect(isQueryOperation(mutationDocument)).toBe(false);
+        expect(isQueryOperation(subscriptionDocument)).toBe(false);
     });
 });

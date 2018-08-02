@@ -1,4 +1,11 @@
+import { ApolloCache } from 'apollo-cache';
+import { ApolloReducerConfig } from 'apollo-cache-inmemory';
 import { FetchResult } from 'apollo-link';
+// deepDedupLink types
+export interface DeepDedupLinkConfig {
+    cache: ApolloCache<any>;
+    cacheConfig?: ApolloReducerConfig;
+}
 
 // queryExecution types
 export type Resolver = (

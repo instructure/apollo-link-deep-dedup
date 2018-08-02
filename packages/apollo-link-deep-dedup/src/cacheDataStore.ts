@@ -11,4 +11,8 @@ export default class CacheDataStore {
     public get(dataId: string) {
         return this.data[dataId];
     }
+
+    public toObject() {
+        return this.data;
+    }
 }
