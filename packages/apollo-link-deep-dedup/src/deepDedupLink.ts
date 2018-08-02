@@ -43,8 +43,9 @@ export class DeepDedupLink extends ApolloLink {
             return forward(operation);
         }
 
+        // deduplicate query
         let deduplicatedOp: Operation;
-        try { // deduplicate query
+        try {
             deduplicatedOp = this.deduplicateQuery(operation);
         } catch (err) {
             // Case A: if encountered error, pass it to upstream links
@@ -64,7 +65,6 @@ export class DeepDedupLink extends ApolloLink {
 
         // Case C: if query has not been fully resolved, pass deduplicated query to downstream links
         const observable = forward(deduplicatedOp);
-
         // create an Observable for upstream links to subscribe to
         return new Observable(observer => { // observer here refers to upstream link
             // subscribe to the resulting link
@@ -83,8 +83,6 @@ export class DeepDedupLink extends ApolloLink {
     }
 
     /**
-     * @todo
-     *
      * @param   {Operation} operation Apollo-Link Operation
      * @returns {Operation} a query-deduplicated operation
      */

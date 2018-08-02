@@ -4,7 +4,6 @@ import {
 } from './types';
 
 /**
- *
  * @param {string} fieldName the name of the field to be resolved
  * @param {CacheDataIdObj} idValue an object holding dataId to the corresponding object in the cache
  * @param {any} args argument associated with this field

@@ -1,6 +1,7 @@
 import { ApolloCache } from 'apollo-cache';
 import { ApolloReducerConfig } from 'apollo-cache-inmemory';
 import { FetchResult } from 'apollo-link';
+
 // deepDedupLink types
 export interface DeepDedupLinkConfig {
     cache: ApolloCache<any>;
@@ -19,18 +20,17 @@ export interface VariableMap { // query variables
     [name: string]: any;
 }
 
-export interface ExecContext {
+export interface ExecutionContext {
     variableValues: VariableMap;
     resolver: Resolver;
     resolutionContext?: any;
 }
 
-export interface FieldResult {
+export interface ExecutionResult {
     data: FetchResult;
     allResolved: boolean;
 }
 
-export type QueryResult = FieldResult; // type alias
 
 // readCacheResolver and cache specific types
 export interface CacheDataIdObj {

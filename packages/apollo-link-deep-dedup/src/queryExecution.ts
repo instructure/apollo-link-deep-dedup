@@ -1,6 +1,19 @@
+// types
 import { FetchResult } from 'apollo-link';
+import {
+    DocumentNode,
+    FieldNode,
+    SelectionNode,
+    SelectionSetNode,
+} from 'graphql';
+import {
+    ExecutionContext,
+    ExecutionResult,
+    Resolver,
+    VariableMap,
+} from './types';
 
-// util funcs from apollo-utilities
+// util functions
 import {
     argumentsObjectFromField,
     getMainDefinition,
@@ -8,29 +21,10 @@ import {
     resultKeyNameFromField,
     shouldInclude,
 } from 'apollo-utilities';
-
-// util funcs from lodash
 import {
     cloneDeep,
     merge,
 } from 'lodash';
-
-// graphql types
-import {
-    DocumentNode,
-    FieldNode,
-    SelectionNode,
-    SelectionSetNode,
-} from 'graphql';
-
-// custom types
-import {
-    ExecContext,
-    FieldResult,
-    QueryResult,
-    Resolver,
-    VariableMap,
-} from './types';
 
 /**
  * @param {Resolver} resolver resolver that resolves each query field
@@ -38,7 +32,7 @@ import {
  * @param {VariableMap} variableValues the variable values map associated with the query
  * @param {any} rootValue entry point passed into resolver for field resolution
  * @param {any} [resolutionContext] a context object holding field resolution related info
- * @returns {QueryResult} a result object containing resolved data and allResolved flag
+ * @returns {ExecutionResult} a result object containing resolved data and allResolved flag
  */
 export const executeQuery = (
     resolver: Resolver,
@@ -46,36 +40,36 @@ export const executeQuery = (
     variableValues: VariableMap,
     rootValue: any,
     resolutionContext?: any,
-): QueryResult => {
+): ExecutionResult => {
     const mainDefinition = getMainDefinition(document);
 
-    const execContext: ExecContext = {
+    const executionContext: ExecutionContext = {
         variableValues,
         resolver,
         resolutionContext,
     };
 
-    const queryResult = executeSelectionSet(
+    return executeSelectionSet(
         mainDefinition.selectionSet,
         rootValue,
-        execContext,
+        executionContext,
     );
-
-    return {
-        data: queryResult,
-        allResolved: selectionSetAllResolved(mainDefinition.selectionSet),
-    } as QueryResult;
 };
 
+/**
+ * @param {SelectionSetNode} selectionSet a SelectionSet node in the AST to be executed
+ * @param {any} rootValue entry point passed into resolver for field resolution
+ * @param {ExecutionContext} executionContext a context object holding field execution related info
+ */
 const executeSelectionSet = (
     selectionSet: SelectionSetNode,
     rootValue: any,
-    execContext: ExecContext,
-): FetchResult => {
-    const result = {};
+    executionContext: ExecutionContext,
+): ExecutionResult => {
+    const resultData = {};
+    const { variableValues } = executionContext;
     // modified selections list that's to replace the old one
     const deduplicatedSelections: SelectionNode[] = [];
-    const { variableValues } = execContext;
 
     selectionSet.selections.forEach((selection: SelectionNode) => {
         // validate selection
@@ -87,7 +81,7 @@ const executeSelectionSet = (
         const fieldResult = executeField(
             selection,
             rootValue,
-            execContext,
+            executionContext,
         );
 
         // if this field has not been fully resolved, include it as part of the new AST
@@ -95,40 +89,40 @@ const executeSelectionSet = (
             deduplicatedSelections.push(selection);
         }
 
-        const fieldResultData: FetchResult = fieldResult.data;
         // append result data to result object
+        const fieldResultData: FetchResult = fieldResult.data;
         if (fieldResultData !== undefined) {
             const resultFieldKey = resultKeyNameFromField(selection);
-            if (result[resultFieldKey] === undefined) {
-                result[resultFieldKey] = fieldResultData;
+            if (resultData[resultFieldKey] === undefined) {
+                resultData[resultFieldKey] = fieldResultData;
             } else {
-                merge(result[resultFieldKey], fieldResultData);
+                merge(resultData[resultFieldKey], fieldResultData);
             }
         }
-        return;
     });
 
     // rewrite AST by replacing selectionSet.selections with deduplicated selections
     selectionSet.selections = deduplicatedSelections;
-    return result;
+    const allResolved = deduplicatedSelections.length === 0;
+    return { data: resultData, allResolved } as ExecutionResult;
 };
 
 /**
- * @param {FieldNode} field a field node in the AST to be executed
+ * @param {FieldNode} field a Field node in the AST to be executed
  * @param {any} rootValue entry point passed into resolver for field resolution
- * @param {ExecContext} execContext a context object holding field execution related info
- * @returns {FieldResult} a result object containing resolved data and allResolved flag
+ * @param {ExecutionContext} executionContext a context object holding field execution related info
+ * @returns {ExecutionResult} a result object containing resolved data and allResolved flag
  */
 const executeField = (
     field: FieldNode,
     rootValue: any,
-    execContext: ExecContext,
-): FieldResult => {
+    executionContext: ExecutionContext,
+): ExecutionResult => {
     const {
         variableValues,
         resolver,
         resolutionContext,
-    } = execContext;
+    } = executionContext;
 
     const fieldName = field.name.value;
     const args = argumentsObjectFromField(field, variableValues);
@@ -137,88 +131,69 @@ const executeField = (
     // Case A: cache miss
     if (result === undefined) {
         // any field in a GraphQL response can be null, or missing
-        return { data: result, allResolved: false } as FieldResult;
+        return { data: result, allResolved: false } as ExecutionResult;
     }
 
-    // Case B: fully resolved into scalar types
+    // Case B: fully resolved to scalar types
     if (!field.selectionSet) {
-        return { data: result, allResolved: true } as FieldResult;
+        return { data: result, allResolved: true } as ExecutionResult;
     }
 
     // From here down, the field has a selection set, which means it's trying to
     // query a GraphQLObjectType
 
-    // Case C: resolved into a subSelectedArray
+    // Case C: resolved to a subSelectedArray
     if (Array.isArray(result)) {
-        return executeSubSelectedArray(field, result, execContext);
+        return executeSubSelectedArray(field, result, executionContext);
     }
 
-    // Case D: resolved into a sub-selectionSet, recurse executeSelectionSet
-    const executeSelectionSetResult = executeSelectionSet(field.selectionSet, result, execContext);
-    return {
-        data: executeSelectionSetResult,
-        allResolved: selectionSetAllResolved(field.selectionSet),
-    } as FieldResult;
+    // Case D: resolved to a sub-selectionSet, recurse executeSelectionSet
+    return executeSelectionSet(field.selectionSet, result, executionContext);
 };
 
 /**
- *
- * @param {FieldNode} field a field node in the AST to be executed
+ * @param {FieldNode} field a Field node in the AST to be executed
  * @param {any[]} subSelectedArray a (possibly nested) N-d array of selectionSets
- * @param {ExecContext} execContext a context object holding field execution related info
- * @returns {FieldResult} a result object containing resolved data and allResolved flag
+ * @param {ExecutionContext} executionContext a context object holding field execution related info
+ * @returns {ExecutionResult} a result object containing resolved data and allResolved flag
  */
 const executeSubSelectedArray = (
     field: FieldNode,
     subSelectedArray: any[],
-    execContext: ExecContext,
-): FieldResult => {
-
-    // deep-cloned copy of field, to prevent the original field from being mutated during field execution
+    executionContext: ExecutionContext,
+): ExecutionResult => {
+    const resultDataList: any = [];
+    // deep-cloned copy of field,
+    // to prevent the original field from being mutated during iterative field execution
     let tempField;
-    const resultDataList: FetchResult[] = [];
-    const allResolvedList: boolean[] = [];
 
     subSelectedArray.forEach(item => {
-        // handle null value in array
+        // null value in array
         if (item === null) {
-            return null;
-        }
-
-        tempField = cloneDeep(field);
-        if (Array.isArray(item)) {
-            // Case A: this is a nested array, recurse
-            const executeSubSelectedArrayResult: FieldResult = executeSubSelectedArray(
-                tempField,
-                item,
-                execContext,
-            );
-            resultDataList.push(executeSubSelectedArrayResult.data);
-            allResolvedList.push(executeSubSelectedArrayResult.allResolved);
+            resultDataList.push(null);
         } else {
-            // Case B: this is an object, run the selection set on it
-            const executeSelectionSetResult: FetchResult = executeSelectionSet(
-                tempField.selectionSet as SelectionSetNode,
-                item,
-                execContext,
-            );
-            resultDataList.push(executeSelectionSetResult);
-            allResolvedList.push(selectionSetAllResolved(tempField.selectionSet));
+            tempField = cloneDeep(field);
+            const executionResult: ExecutionResult =
+                Array.isArray(item) ?
+                    // Case A: this is a nested array, recurse
+                    executeSubSelectedArray(
+                        tempField,
+                        item,
+                        executionContext,
+                    )
+                    :
+                    // Case B: this is an object, run the selection set on it
+                    executeSelectionSet(
+                        tempField.selectionSet as SelectionSetNode,
+                        item,
+                        executionContext,
+                    );
+            resultDataList.push(executionResult.data);
         }
     });
 
-    // assign the executed tempField to the original field in the end
-    field = tempField;
-
-    return {
-        data: resultDataList,
-        allResolved: allResolvedList.every(allResolved => allResolved),
-    } as FieldResult;
+    // rewrite AST by replacing selectionSet.selections with empField's deduplicated selections
+    (field.selectionSet as SelectionSetNode).selections = tempField.selectionSet.selections;
+    const allResolved = tempField.selectionSet.selections.length === 0;
+    return { data: (resultDataList as FetchResult), allResolved } as ExecutionResult;
 };
-
-/**
- * @param {SelectionNode} selectionSet a selectionSet node in the AST
- * @returns {boolean} whether all selections in the selectionSet have been resolved
- */
-const selectionSetAllResolved = (selectionSet: SelectionSetNode): boolean =>
-    selectionSet.selections.length === 0;
