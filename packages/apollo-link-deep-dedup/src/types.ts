@@ -31,7 +31,6 @@ export interface ExecutionResult {
     allResolved: boolean;
 }
 
-
 // readCacheResolver and cache specific types
 export interface CacheDataIdObj {
     type: 'id';
@@ -39,6 +38,3 @@ export interface CacheDataIdObj {
     generated: boolean;
     typename: string | undefined;
 }
-
-
-

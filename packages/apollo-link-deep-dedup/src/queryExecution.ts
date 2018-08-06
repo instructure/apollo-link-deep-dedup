@@ -168,21 +168,21 @@ const executeSubSelectedArray = (
     let tempField;
 
     subSelectedArray.forEach(item => {
-        // null value in array
+        // Case A: this is a null value in the array, append it to resultDataList
         if (item === null) {
             resultDataList.push(null);
         } else {
             tempField = cloneDeep(field);
             const executionResult: ExecutionResult =
                 Array.isArray(item) ?
-                    // Case A: this is a nested array, recurse
+                    // Case B: this is a nested array, recurse
                     executeSubSelectedArray(
                         tempField,
                         item,
                         executionContext,
                     )
                     :
-                    // Case B: this is an object, run the selection set on it
+                    // Case C: this is an object, run the selection set on it
                     executeSelectionSet(
                         tempField.selectionSet as SelectionSetNode,
                         item,
@@ -192,7 +192,7 @@ const executeSubSelectedArray = (
         }
     });
 
-    // rewrite AST by replacing selectionSet.selections with empField's deduplicated selections
+    // rewrite AST by replacing selectionSet.selections with tempField's deduplicated selections
     (field.selectionSet as SelectionSetNode).selections = tempField.selectionSet.selections;
     const allResolved = tempField.selectionSet.selections.length === 0;
     return { data: (resultDataList as FetchResult), allResolved } as ExecutionResult;
