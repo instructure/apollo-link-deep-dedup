@@ -32,6 +32,13 @@ export class DeepDedupLink extends ApolloLink {
         this.cacheConfig = config.cacheConfig;
     }
 
+    /**
+     * Apollo Link life cycle method:
+     * https://www.apollographql.com/docs/link/overview.html#request
+     * @param {Operation} operation Apollo Link Operation
+     * @param {NextLink} forward Apollo Link NextLink
+     * @returns {Observable<FetchResult>} Apollo Link Observable<FetchResult>
+     */
     public request(
         operation: Operation,
         forward: NextLink,
