@@ -27,6 +27,13 @@ import {
 } from 'lodash';
 
 /**
+ * Executes a GraphQL query AST with the given field resolver
+ * The implementation is based on the official GraphQL language specification
+ * {@link http://facebook.github.io/graphql/June2018/#sec-Executing-Operations GraphQL Query Execution}
+ * and apollo-client/graphql-anywhere
+ * {@link https://github.com/apollographql/apollo-client/tree/master/packages/graphql-anywhere graphql-anywhere}
+ * with additional query rewriting logic
+ *
  * @param {Resolver} resolver resolver that resolves each query field
  * @param {DocumentNode} document the main GraphQL query document
  * @param {VariableMap} variableValues the variable values map associated with the query
@@ -75,6 +82,8 @@ const executeSelectionSet = (
         // validate selection
         if (!shouldInclude(selection, variableValues)
             || !isField(selection)) {
+            // append it to the deduplicatedSelections as part of the new AST
+            deduplicatedSelections.push(selection);
             return;
         }
 

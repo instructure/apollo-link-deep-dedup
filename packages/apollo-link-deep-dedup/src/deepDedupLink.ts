@@ -34,7 +34,7 @@ export class DeepDedupLink extends ApolloLink {
 
     /**
      * Apollo Link life cycle method:
-     * https://www.apollographql.com/docs/link/overview.html#request
+     * {@link https://www.apollographql.com/docs/link/overview.html#request Apollo Link}
      * @param {Operation} operation Apollo Link Operation
      * @param {NextLink} forward Apollo Link NextLink
      * @returns {Observable<FetchResult>} Apollo Link Observable<FetchResult>
@@ -51,18 +51,12 @@ export class DeepDedupLink extends ApolloLink {
         }
 
         // deduplicate query
-        let deduplicatedOp: Operation;
-        try {
-            deduplicatedOp = this.deduplicateQuery(operation);
-        } catch (err) {
-            // Case A: if encountered error, pass it to upstream links
-            return new Observable(observer => {
-                observer.error({ error: err });
-                observer.complete();
-            });
-        }
+        // Notes on error handling:
+        // Basically at this point (query has gotten passed into the Links), the query's already been validated and GraphQL allows nullable values,
+        // if there's any query resolution failure, we will treat them as cache miss, and get out of the way instead of throwing errors
+        const deduplicatedOp: Operation = this.deduplicateQuery(operation);
 
-        // Case B: if query has been fully resolved, complete the operation and pass the result to upstream links
+        // Case A: if query has been fully resolved, complete the operation and pass the result to upstream links
         if (this.allResolved) {
             return new Observable(observer => {
                 observer.next({ data: this.resultMap });
@@ -70,7 +64,7 @@ export class DeepDedupLink extends ApolloLink {
             });
         }
 
-        // Case C: if query has not been fully resolved, pass deduplicated query to downstream links
+        // Case B: if query has not been fully resolved, pass deduplicated query to downstream links
         const observable = forward(deduplicatedOp);
         // create an Observable for upstream links to subscribe to
         return new Observable(observer => { // observer here refers to upstream link
