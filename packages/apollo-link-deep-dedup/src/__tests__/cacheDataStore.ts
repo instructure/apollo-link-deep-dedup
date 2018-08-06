@@ -42,13 +42,13 @@ describe('cacheDataStore', () => {
         const post1Result = store.get('Post:1');
         const undefinedResult = store.get('undefinedObject');
         // assert
-        expect(author1Result).toBe(author1Object);
-        expect(post1Result).toBe(post1Object);
-        expect(undefinedResult).toBe(undefined);
+        expect(author1Result).toEqual(author1Object);
+        expect(post1Result).toEqual(post1Object);
+        expect(undefinedResult).toEqual(undefined);
     });
 
     it(`toObject returns correct object`, () => {
         const result = store.toObject();
-        expect(result).toBe(seed);
+        expect(result).toEqual(seed);
     });
 });
