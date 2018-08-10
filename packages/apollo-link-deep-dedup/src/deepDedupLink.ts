@@ -52,23 +52,27 @@ export class DeepDedupLink extends ApolloLink {
         // if there's any query resolution failure, we will treat them as cache miss, and get out of the way instead of throwing errors
         const deduplicatedOp: Operation = this.deduplicateQuery(operation);
 
+        // Apollo Link uses observable pattern to chain together the links
+        // Here's the documentation on zen-observable: https://github.com/zenparsing/zen-observable#api
+
         // Case A: if query has been fully resolved, complete the operation and pass the result to upstream links
         if (this.allResolved) {
-            return new Observable(observer => {
-                observer.next({ data: this.resultMap });
-                observer.complete();
+            return new Observable(upstreamLinkObserver => {
+                upstreamLinkObserver.next({ data: this.resultMap });
+                upstreamLinkObserver.complete();
             });
         }
 
         // Case B: if query has not been fully resolved, pass deduplicated query to downstream links
-        const observable = forward(deduplicatedOp);
+        const downstreamLinkObservable = forward(deduplicatedOp);
         // create an Observable for upstream links to subscribe to
-        return new Observable(observer => { // observer here refers to upstream link
+        // Here's where we subscribe to the result from downstream links, aggregate the result, and notify the upstream links
+        return new Observable(upstreamLinkObserver => {
             // subscribe to the resulting link
-            const subscription = observable.subscribe({ // observable here refers to downstream link
-                next: (data) => observer.next(this.aggregateResult(data)), // pass data up to upstream links
-                error: observer.error.bind(observer),
-                complete: observer.complete.bind(observer),
+            const subscription = downstreamLinkObservable.subscribe({
+                next: (data) => upstreamLinkObserver.next(this.aggregateResult(data)), // pass data up to upstream links
+                error: upstreamLinkObserver.error.bind(upstreamLinkObserver),
+                complete: upstreamLinkObserver.complete.bind(upstreamLinkObserver),
             });
 
             // cleanup function
