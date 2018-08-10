@@ -67,7 +67,7 @@ export class DeepDedupLink extends ApolloLink {
         const downstreamLinkObservable = forward(deduplicatedOp);
         // create an Observable for upstream links to subscribe to
         // Here's where we subscribe to the result from downstream links, aggregate the result, and notify the upstream links
-        return new Observable(upstreamLinkObserver => {
+        const thisLinkObservable = new Observable(upstreamLinkObserver => {
             // subscribe to the resulting link
             const subscription = downstreamLinkObservable.subscribe({
                 next: (data) => upstreamLinkObserver.next(this.aggregateResult(data)), // pass data up to upstream links
@@ -81,6 +81,7 @@ export class DeepDedupLink extends ApolloLink {
                 subscription.unsubscribe();
             };
         });
+        return thisLinkObservable; // return thisLinkObservable for upstream links to subscribe to
     }
 
     /**
