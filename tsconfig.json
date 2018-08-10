@@ -15,6 +15,7 @@
         "noUnusedLocals": true,
         "skipLibCheck": true,
         "strict": true,
-        "alwaysStrict": true
+        "alwaysStrict": true,
+        "allowSyntheticDefaultImports": true,
     }
 }
