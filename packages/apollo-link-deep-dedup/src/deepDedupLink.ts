@@ -1,5 +1,3 @@
-import { ApolloCache } from 'apollo-cache';
-import { ApolloReducerConfig } from 'apollo-cache-inmemory';
 import {
     ApolloLink,
     FetchResult,
@@ -12,24 +10,22 @@ import { DocumentNode } from 'graphql';
 import cacheDataStore from './cacheDataStore';
 import { executeQuery } from './queryExecution';
 import { readCacheResolver } from './readCacheResolver';
-import { DeepDedupLinkConfig } from './types';
+import { DeepDedupLinkOptions } from './types';
 import { isQueryOperation } from './utils';
 
 /*
  * Expects context to contain the forceFetch field if no dedup
  */
 export class DeepDedupLink extends ApolloLink {
-    protected cache: ApolloCache<any>;
+    protected options: DeepDedupLinkOptions;
     protected resultMap: FetchResult;
     protected allResolved: boolean;
-    protected cacheConfig?: ApolloReducerConfig;
 
-    constructor(config: DeepDedupLinkConfig) {
+    constructor(options: DeepDedupLinkOptions) {
         super();
-        this.cache = config.cache;
+        this.options = options;
         this.resultMap = {};
         this.allResolved = false;
-        this.cacheConfig = config.cacheConfig;
     }
 
     /**
@@ -52,7 +48,7 @@ export class DeepDedupLink extends ApolloLink {
 
         // deduplicate query
         // Notes on error handling:
-        // Basically at this point (query has gotten passed into the Links), the query's already been validated and GraphQL allows nullable values,
+        // Basically at this point (query has gotten passed into the Links), the query's already been validated and GraphQL allows nullable values.
         // if there's any query resolution failure, we will treat them as cache miss, and get out of the way instead of throwing errors
         const deduplicatedOp: Operation = this.deduplicateQuery(operation);
 
@@ -88,11 +84,12 @@ export class DeepDedupLink extends ApolloLink {
      * @returns {Operation} a query-deduplicated operation
      */
     private deduplicateQuery = (operation: Operation): Operation => {
-        const store = new cacheDataStore(this.cache.extract());
+        const { cache, cacheConfig } = this.options;
+        const store = new cacheDataStore(cache.extract());
         const resolutionContext = {
             store,
-            dataIdFromObject: this.cacheConfig && this.cacheConfig.dataIdFromObject || null,
-            cacheRedirects: this.cacheConfig && this.cacheConfig.cacheRedirects || {},
+            dataIdFromObject: cacheConfig && cacheConfig.dataIdFromObject || null,
+            cacheRedirects: cacheConfig && cacheConfig.cacheRedirects || {},
         };
 
         // cache specific entry point
