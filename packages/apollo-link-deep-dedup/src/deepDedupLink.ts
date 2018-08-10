@@ -1,3 +1,4 @@
+// types
 import { ApolloCache } from 'apollo-cache';
 import { ApolloReducerConfig } from 'apollo-cache-inmemory';
 import {
@@ -8,27 +9,33 @@ import {
     Operation,
 } from 'apollo-link';
 import { DocumentNode } from 'graphql';
+import {
+    DeepDedupLinkConfig,
+    ExecutionResult,
+} from './types';
 
+// util functions
+import {
+    cloneDeep,
+    merge,
+} from 'lodash';
+import { isQueryOperation } from './utils';
+
+// query deduplication related
 import cacheDataStore from './cacheDataStore';
 import { executeQuery } from './queryExecution';
 import { readCacheResolver } from './readCacheResolver';
-import { DeepDedupLinkConfig } from './types';
-import { isQueryOperation } from './utils';
 
 /*
  * Expects context to contain the forceFetch field if no dedup
  */
 export class DeepDedupLink extends ApolloLink {
     protected cache: ApolloCache<any>;
-    protected resultMap: FetchResult;
-    protected allResolved: boolean;
     protected cacheConfig?: ApolloReducerConfig;
 
     constructor(config: DeepDedupLinkConfig) {
         super();
         this.cache = config.cache;
-        this.resultMap = {};
-        this.allResolved = false;
         this.cacheConfig = config.cacheConfig;
     }
 
@@ -50,16 +57,24 @@ export class DeepDedupLink extends ApolloLink {
             return forward(operation);
         }
 
+        const initialQuery = cloneDeep(operation.query);
+        const initialVariables = cloneDeep(operation.variables);
+
+        const cacheResult: ExecutionResult = {
+            data: {},
+            allResolved: false,
+        };
+
         // deduplicate query
         // Notes on error handling:
         // Basically at this point (query has gotten passed into the Links), the query's already been validated and GraphQL allows nullable values,
         // if there's any query resolution failure, we will treat them as cache miss, and get out of the way instead of throwing errors
-        const deduplicatedOp: Operation = this.deduplicateQuery(operation);
+        const deduplicatedOp: Operation = this.deduplicateQuery(operation, cacheResult);
 
         // Case A: if query has been fully resolved, complete the operation and pass the result to upstream links
-        if (this.allResolved) {
+        if (cacheResult.allResolved) {
             return new Observable(observer => {
-                observer.next({ data: this.resultMap });
+                observer.next({ data: cacheResult.data });
                 observer.complete();
             });
         }
@@ -70,7 +85,20 @@ export class DeepDedupLink extends ApolloLink {
         return new Observable(observer => { // observer here refers to upstream link
             // subscribe to the resulting link
             const subscription = observable.subscribe({ // observable here refers to downstream link
-                next: (data) => observer.next(this.aggregateResult(data)), // pass data up to upstream links
+                next: (downstreamData) => {
+                    // restore deduplicated query back to initial query
+                    this.restoreQuery(
+                        initialQuery,
+                        initialVariables,
+                        deduplicatedOp,
+                    );
+
+                    // aggregate and pass data up to upstream links,
+                    observer.next(this.aggregateResult(
+                        downstreamData,
+                        cacheResult,
+                    ));
+                },
                 error: observer.error.bind(observer),
                 complete: observer.complete.bind(observer),
             });
@@ -87,7 +115,7 @@ export class DeepDedupLink extends ApolloLink {
      * @param   {Operation} operation Apollo-Link Operation
      * @returns {Operation} a query-deduplicated operation
      */
-    private deduplicateQuery = (operation: Operation): Operation => {
+    private deduplicateQuery = (operation: Operation, cacheResult: ExecutionResult): Operation => {
         const store = new cacheDataStore(this.cache.extract());
         const resolutionContext = {
             store,
@@ -109,8 +137,8 @@ export class DeepDedupLink extends ApolloLink {
             resolutionContext,
         );
 
-        this.resultMap = queryResult.data;
-        this.allResolved = queryResult.allResolved;
+        cacheResult.data = queryResult.data;
+        cacheResult.allResolved = queryResult.allResolved;
         return operation;
     }
 
@@ -120,7 +148,16 @@ export class DeepDedupLink extends ApolloLink {
      * @param   {FetchResult} data Apollo-Link FetchResult
      * @returns {FetchResult} a re-aggregated complete fetchResult
      */
-    private aggregateResult = (data: FetchResult): FetchResult => {
-        return data;
+    private aggregateResult = (networkResult: FetchResult, cacheResult: any): FetchResult => {
+        merge(cacheResult.data, networkResult.data);
+        return { data: cacheResult.data } as FetchResult;
+    }
+
+    /**
+     *
+     */
+    private restoreQuery = (q: any, v: any, operation: Operation) => {
+        operation.query = q;
+        operation.variables = v;
     }
 }
