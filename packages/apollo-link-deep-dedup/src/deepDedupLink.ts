@@ -28,7 +28,6 @@ import readCacheResolver from './readCacheResolver';
 export class DeepDedupLink extends ApolloLink {
     protected options: DeepDedupLinkOptions;
 
-
     constructor(options: DeepDedupLinkOptions) {
         super();
         this.options = options;
@@ -106,6 +105,8 @@ export class DeepDedupLink extends ApolloLink {
     }
 
     /**
+     * Deduplicates the query in the given operation,
+     * and returns a deduplicateQueryResult object containing the deduplicatedOp and cacheResult
      * @param   {Operation} operation Apollo-Link Operation
      * @returns {DeduplicateQueryResult} DeduplicateQueryResult object that contains the deduplicatedOp and cacheResult
      */
@@ -139,11 +140,15 @@ export class DeepDedupLink extends ApolloLink {
     }
 
     /**
+     * Aggregates the result from the network and the cache, and returns a complete FetchResult
      * @param   {FetchResult} networkResult Apollo-Link FetchResult
      * @param   {ExecutionResult} cacheResult ExecutionResult from the cache
      * @returns {FetchResult} a re-aggregated complete fetchResult
      */
-    private aggregateResult = (networkResult: FetchResult, cacheResult: ExecutionResult): FetchResult => {
+    private aggregateResult = (
+        networkResult: FetchResult,
+        cacheResult: ExecutionResult,
+    ): FetchResult => {
         merge(cacheResult.data, networkResult.data);
         return { data: cacheResult.data } as FetchResult;
     }
