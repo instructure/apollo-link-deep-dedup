@@ -28,7 +28,7 @@ export const readCacheResolver: Resolver = (
     resolutionContext: any,
 ) => {
     const {
-        store, // cache store
+        store, // cache data store
         cacheRedirects,
         dataIdFromObject,
     } = resolutionContext;
@@ -43,7 +43,8 @@ export const readCacheResolver: Resolver = (
         const storeKeyName: string = args ? getStoreKeyName(fieldName, args) : fieldName;
         fieldValue = obj[storeKeyName]; // can also be undefined if cache miss
 
-        // handle cache redirects
+        // handle cache redirects if it's configured:
+        // https://www.apollographql.com/docs/react/advanced/caching.html#cacheRedirect
         if (
             typeof fieldValue === 'undefined' &&
             cacheRedirects &&
@@ -69,10 +70,12 @@ export const readCacheResolver: Resolver = (
         }
 
         // if this is an object scalar, it must be a json blob and we have to unescape it
+        // this is specific to the cache data in apollo-cache-inmemory
         if (isJsonValue(fieldValue)) {
             return fieldValue.json;
         }
     }
-
     return fieldValue;
 };
+
+export default readCacheResolver;

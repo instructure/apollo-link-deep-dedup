@@ -206,3 +206,5 @@ const executeSubSelectedArray = (
     const allResolved = tempField.selectionSet.selections.length === 0;
     return { data: (resultDataList as FetchResult), allResolved } as ExecutionResult;
 };
+
+export default executeQuery;

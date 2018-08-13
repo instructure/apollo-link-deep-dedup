@@ -10,6 +10,7 @@ import {
 } from 'apollo-link';
 import { DocumentNode } from 'graphql';
 import {
+    DeduplicateQueryResult,
     DeepDedupLinkConfig,
     ExecutionResult,
 } from './types';
@@ -23,8 +24,8 @@ import { isQueryOperation } from './utils';
 
 // query deduplication related
 import cacheDataStore from './cacheDataStore';
-import { executeQuery } from './queryExecution';
-import { readCacheResolver } from './readCacheResolver';
+import executeQuery from './queryExecution';
+import readCacheResolver from './readCacheResolver';
 
 /*
  * Expects context to contain the forceFetch field if no dedup
@@ -57,19 +58,17 @@ export class DeepDedupLink extends ApolloLink {
             return forward(operation);
         }
 
+        // deep-clone initial query for later query restoration
         const initialQuery = cloneDeep(operation.query);
-        const initialVariables = cloneDeep(operation.variables);
-
-        const cacheResult: ExecutionResult = {
-            data: {},
-            allResolved: false,
-        };
 
         // deduplicate query
         // Notes on error handling:
         // Basically at this point (query has gotten passed into the Links), the query's already been validated and GraphQL allows nullable values,
         // if there's any query resolution failure, we will treat them as cache miss, and get out of the way instead of throwing errors
-        const deduplicatedOp: Operation = this.deduplicateQuery(operation, cacheResult);
+        const {
+            deduplicatedOp,
+            cacheResult,
+        }: DeduplicateQueryResult = this.deduplicateQuery(operation);
 
         // Case A: if query has been fully resolved, complete the operation and pass the result to upstream links
         if (cacheResult.allResolved) {
@@ -86,12 +85,8 @@ export class DeepDedupLink extends ApolloLink {
             // subscribe to the resulting link
             const subscription = observable.subscribe({ // observable here refers to downstream link
                 next: (downstreamData) => {
-                    // restore deduplicated query back to initial query
-                    this.restoreQuery(
-                        initialQuery,
-                        initialVariables,
-                        deduplicatedOp,
-                    );
+                    // restore deduplicated query back to initial query for writing new data to cache
+                    deduplicatedOp.query = initialQuery;
 
                     // aggregate and pass data up to upstream links,
                     observer.next(this.aggregateResult(
@@ -113,9 +108,9 @@ export class DeepDedupLink extends ApolloLink {
 
     /**
      * @param   {Operation} operation Apollo-Link Operation
-     * @returns {Operation} a query-deduplicated operation
+     * @returns {DeduplicateQueryResult} DeduplicateQueryResult object that contains the deduplicatedOp and cacheResult
      */
-    private deduplicateQuery = (operation: Operation, cacheResult: ExecutionResult): Operation => {
+    private deduplicateQuery = (operation: Operation): DeduplicateQueryResult => {
         const store = new cacheDataStore(this.cache.extract());
         const resolutionContext = {
             store,
@@ -129,7 +124,7 @@ export class DeepDedupLink extends ApolloLink {
             id: 'ROOT_QUERY',
         };
 
-        const queryResult = executeQuery(
+        const cacheResult = executeQuery(
             readCacheResolver,
             operation.query as DocumentNode,
             operation.variables,
@@ -137,27 +132,19 @@ export class DeepDedupLink extends ApolloLink {
             resolutionContext,
         );
 
-        cacheResult.data = queryResult.data;
-        cacheResult.allResolved = queryResult.allResolved;
-        return operation;
+        return {
+            deduplicatedOp: operation,
+            cacheResult,
+        } as DeduplicateQueryResult;
     }
 
     /**
-     * @todo
-     *
-     * @param   {FetchResult} data Apollo-Link FetchResult
+     * @param   {FetchResult} networkResult Apollo-Link FetchResult
+     * @param   {ExecutionResult} cacheResult ExecutionResult from the cache
      * @returns {FetchResult} a re-aggregated complete fetchResult
      */
-    private aggregateResult = (networkResult: FetchResult, cacheResult: any): FetchResult => {
+    private aggregateResult = (networkResult: FetchResult, cacheResult: ExecutionResult): FetchResult => {
         merge(cacheResult.data, networkResult.data);
         return { data: cacheResult.data } as FetchResult;
-    }
-
-    /**
-     *
-     */
-    private restoreQuery = (q: any, v: any, operation: Operation) => {
-        operation.query = q;
-        operation.variables = v;
     }
 }
