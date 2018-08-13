@@ -21,8 +21,8 @@ import {
     resultKeyNameFromField,
     shouldInclude,
 } from 'apollo-utilities';
-import cloneDeep = require('lodash/clonedeep');
-import merge = require('lodash/merge');
+import cloneDeep = require('lodash.clonedeep');
+import merge = require('lodash.merge');
 
 /**
  * Executes a GraphQL query AST with the given field resolver
