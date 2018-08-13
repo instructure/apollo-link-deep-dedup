@@ -13,8 +13,8 @@ import {
 } from './types';
 
 // util functions
-import cloneDeep = require('lodash/clonedeep');
-import merge = require('lodash/merge');
+import cloneDeep = require('lodash.clonedeep');
+import merge = require('lodash.merge');
 import { isQueryOperation } from './utils';
 
 // query deduplication related
