@@ -1,6 +1,3 @@
-// types
-import { ApolloCache } from 'apollo-cache';
-import { ApolloReducerConfig } from 'apollo-cache-inmemory';
 import {
     ApolloLink,
     FetchResult,
@@ -11,15 +8,13 @@ import {
 import { DocumentNode } from 'graphql';
 import {
     DeduplicateQueryResult,
-    DeepDedupLinkConfig,
+    DeepDedupLinkOptions,
     ExecutionResult,
 } from './types';
 
 // util functions
-import {
-    cloneDeep,
-    merge,
-} from 'lodash';
+import cloneDeep = require('lodash/clonedeep');
+import merge = require('lodash/merge');
 import { isQueryOperation } from './utils';
 
 // query deduplication related
@@ -31,13 +26,12 @@ import readCacheResolver from './readCacheResolver';
  * Expects context to contain the forceFetch field if no dedup
  */
 export class DeepDedupLink extends ApolloLink {
-    protected cache: ApolloCache<any>;
-    protected cacheConfig?: ApolloReducerConfig;
+    protected options: DeepDedupLinkOptions;
 
-    constructor(config: DeepDedupLinkConfig) {
+
+    constructor(options: DeepDedupLinkOptions) {
         super();
-        this.cache = config.cache;
-        this.cacheConfig = config.cacheConfig;
+        this.options = options;
     }
 
     /**
@@ -63,39 +57,43 @@ export class DeepDedupLink extends ApolloLink {
 
         // deduplicate query
         // Notes on error handling:
-        // Basically at this point (query has gotten passed into the Links), the query's already been validated and GraphQL allows nullable values,
+        // Basically at this point (query has gotten passed into the Links), the query's already been validated and GraphQL allows nullable values.
         // if there's any query resolution failure, we will treat them as cache miss, and get out of the way instead of throwing errors
         const {
             deduplicatedOp,
             cacheResult,
         }: DeduplicateQueryResult = this.deduplicateQuery(operation);
 
+        // Apollo Link uses observable pattern to chain together the links
+        // Here's the documentation on zen-observable: https://github.com/zenparsing/zen-observable#api
+
         // Case A: if query has been fully resolved, complete the operation and pass the result to upstream links
         if (cacheResult.allResolved) {
-            return new Observable(observer => {
-                observer.next({ data: cacheResult.data });
-                observer.complete();
+            return new Observable(upstreamLinkObserver => {
+                upstreamLinkObserver.next({ data: cacheResult.data });
+                upstreamLinkObserver.complete();
             });
         }
 
         // Case B: if query has not been fully resolved, pass deduplicated query to downstream links
-        const observable = forward(deduplicatedOp);
+        const downstreamLinkObservable = forward(deduplicatedOp);
         // create an Observable for upstream links to subscribe to
-        return new Observable(observer => { // observer here refers to upstream link
+        // Here's where we subscribe to the result from downstream links, aggregate the result, and notify the upstream links
+        const thisLinkObservable = new Observable(upstreamLinkObserver => {
             // subscribe to the resulting link
-            const subscription = observable.subscribe({ // observable here refers to downstream link
+            const subscription = downstreamLinkObservable.subscribe({
                 next: (downstreamData) => {
                     // restore deduplicated query back to initial query for writing new data to cache
                     deduplicatedOp.query = initialQuery;
 
                     // aggregate and pass data up to upstream links,
-                    observer.next(this.aggregateResult(
+                    upstreamLinkObserver.next(this.aggregateResult(
                         downstreamData,
                         cacheResult,
                     ));
                 },
-                error: observer.error.bind(observer),
-                complete: observer.complete.bind(observer),
+                error: upstreamLinkObserver.error.bind(upstreamLinkObserver),
+                complete: upstreamLinkObserver.complete.bind(upstreamLinkObserver),
             });
 
             // cleanup function
@@ -104,6 +102,7 @@ export class DeepDedupLink extends ApolloLink {
                 subscription.unsubscribe();
             };
         });
+        return thisLinkObservable; // return thisLinkObservable for upstream links to subscribe to
     }
 
     /**
@@ -111,11 +110,12 @@ export class DeepDedupLink extends ApolloLink {
      * @returns {DeduplicateQueryResult} DeduplicateQueryResult object that contains the deduplicatedOp and cacheResult
      */
     private deduplicateQuery = (operation: Operation): DeduplicateQueryResult => {
-        const store = new cacheDataStore(this.cache.extract());
+        const { cache, cacheConfig } = this.options;
+        const store = new cacheDataStore(cache.extract());
         const resolutionContext = {
             store,
-            dataIdFromObject: this.cacheConfig && this.cacheConfig.dataIdFromObject || null,
-            cacheRedirects: this.cacheConfig && this.cacheConfig.cacheRedirects || {},
+            dataIdFromObject: cacheConfig && cacheConfig.dataIdFromObject || null,
+            cacheRedirects: cacheConfig && cacheConfig.cacheRedirects || {},
         };
 
         // cache specific entry point

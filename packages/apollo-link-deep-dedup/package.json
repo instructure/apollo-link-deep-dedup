@@ -25,12 +25,14 @@
     "dependencies": {
         "apollo-cache": "^1.1.12",
         "apollo-link": "^1.2.2",
-        "lodash": "^4.17.10"
+        "lodash.clonedeep": "^4.5.0",
+        "lodash.merge": "^4.6.1"
     },
     "devDependencies": {
         "@types/graphql": "^0.13.1",
         "@types/jest": "^23.1.1",
-        "@types/lodash": "^4.14.115",
+        "@types/lodash.clonedeep": "^4.5.4",
+        "@types/lodash.merge": "^4.6.4",
         "apollo-cache-inmemory": "^1.2.5",
         "graphql": "^0.13.2",
         "graphql-tag": "^2.9.2",
