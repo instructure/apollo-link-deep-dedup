@@ -1,3 +1,4 @@
+// types
 import {
     ApolloLink,
     FetchResult,
@@ -85,11 +86,13 @@ export class DeepDedupLink extends ApolloLink {
                     // restore deduplicated query back to initial query for writing new data to cache
                     deduplicatedOp.query = initialQuery;
 
-                    // aggregate and pass data up to upstream links,
-                    upstreamLinkObserver.next(this.aggregateResult(
-                        downstreamData,
-                        cacheResult,
-                    ));
+                    // aggregate and pass data up to upstream links
+                    upstreamLinkObserver.next(
+                        this.aggregateResult(
+                            downstreamData,
+                            cacheResult,
+                        ),
+                    );
                 },
                 error: upstreamLinkObserver.error.bind(upstreamLinkObserver),
                 complete: upstreamLinkObserver.complete.bind(upstreamLinkObserver),
