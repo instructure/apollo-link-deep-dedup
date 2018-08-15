@@ -54,7 +54,7 @@ In the root directory of this repo:
 
 ```shell
 npm install
-npm bootstrap
+npm run bootstrap
 ```
 
 This will install all dependencies for each package
