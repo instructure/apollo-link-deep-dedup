@@ -19,7 +19,7 @@ import merge = require('lodash.merge');
 import { isQueryOperation } from './utils';
 
 // query deduplication related
-import cacheDataStore from './cacheDataStore';
+import CacheDataStore from './cacheDataStore';
 import executeQuery from './queryExecution';
 import readCacheResolver from './readCacheResolver';
 
@@ -114,14 +114,9 @@ export class DeepDedupLink extends ApolloLink {
      * @returns {DeduplicateQueryResult} DeduplicateQueryResult object that contains the deduplicatedOp and cacheResult
      */
     private deduplicateQuery = (operation: Operation): DeduplicateQueryResult => {
-        const { cache, cacheConfig } = this.options;
-        const store = new cacheDataStore(cache.extract());
-        const resolutionContext = {
-            store,
-            dataIdFromObject: cacheConfig && cacheConfig.dataIdFromObject || null,
-            cacheRedirects: cacheConfig && cacheConfig.cacheRedirects || {},
-        };
-
+        const { cache } = this.options;
+        const store = new CacheDataStore(cache.extract());
+        const resolutionContext = { store };
         // cache specific entry point
         const rootValue = {
             type: 'id',

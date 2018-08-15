@@ -1,5 +1,4 @@
 import { ApolloCache } from 'apollo-cache';
-import { ApolloReducerConfig } from 'apollo-cache-inmemory';
 import {
     FetchResult,
     Operation,
@@ -8,7 +7,6 @@ import {
 // deepDedupLink types
 export interface DeepDedupLinkOptions {
     cache: ApolloCache<any>;
-    cacheConfig?: ApolloReducerConfig;
 }
 
 export interface DeduplicateQueryResult {
