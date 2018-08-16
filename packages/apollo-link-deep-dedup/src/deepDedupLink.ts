@@ -1,6 +1,7 @@
 // types
 import {
     ApolloLink,
+    DocumentNode as LinkDocumentNode,
     FetchResult,
     NextLink,
     Observable,
@@ -69,6 +70,11 @@ export class DeepDedupLink extends ApolloLink {
 
         // Case A: if query has been fully resolved, complete the operation and pass the result to upstream links
         if (cacheResult.allResolved) {
+            // restore deduplicated query back to initial query after execution
+            this.restoreQuery(
+                deduplicatedOp,
+                initialQuery,
+            );
             return new Observable(upstreamLinkObserver => {
                 upstreamLinkObserver.next({ data: cacheResult.data });
                 upstreamLinkObserver.complete();
@@ -83,8 +89,11 @@ export class DeepDedupLink extends ApolloLink {
             // subscribe to the resulting link
             const subscription = downstreamLinkObservable.subscribe({
                 next: (downstreamData) => {
-                    // restore deduplicated query back to initial query for writing new data to cache
-                    deduplicatedOp.query = initialQuery;
+                    // restore deduplicated query back to initial query after execution
+                    this.restoreQuery(
+                        deduplicatedOp,
+                        initialQuery,
+                    );
 
                     // aggregate and pass data up to upstream links
                     upstreamLinkObserver.next(
@@ -149,5 +158,17 @@ export class DeepDedupLink extends ApolloLink {
     ): FetchResult => {
         merge(cacheResult.data, networkResult.data);
         return { data: cacheResult.data } as FetchResult;
+    }
+
+    /**
+     * Restores the operation's query to initialQuery
+     * @param  {Operation} operation Apollo-Link Operation
+     * @param  {LinkDocumentNode} initialQuery the initial GraphQL query document
+     */
+    private restoreQuery = (
+        operation: Operation,
+        initialQuery: LinkDocumentNode,
+    ): void => {
+        operation.query = initialQuery;
     }
 }
