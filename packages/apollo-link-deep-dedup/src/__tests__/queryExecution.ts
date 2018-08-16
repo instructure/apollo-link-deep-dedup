@@ -7,7 +7,7 @@ import CacheDataStore from '../cacheDataStore';
 import executeQuery from '../queryExecution';
 import readCacheResolver from '../readCacheResolver';
 
-describe('executeQuery', () => {
+describe('executeQuery()', () => {
     // initialize fake cache store
     const cacheDataSeed = {
         'Author:1': {
@@ -222,7 +222,7 @@ describe('executeQuery', () => {
         expect(querywithFragAndDirect).toEqual(initialQuery);
     });
 
-    it(`works with basic query`, () => {
+    it(`deduplicates basic query`, () => {
         const query = gql`
             query {
                 authors {
@@ -265,7 +265,7 @@ describe('executeQuery', () => {
         expect(print(query)).toEqual(print(expectedDeduplicatedQuery));
     });
 
-    it(`works with query with variables`, () => {
+    it(`deduplicates query with variables`, () => {
         const query = gql`
             query ($authorId: Int!)  {
                 author(id: $authorId) {
@@ -306,7 +306,7 @@ describe('executeQuery', () => {
         expect(print(query)).toEqual(print(expectedDeduplicatedQuery));
     });
 
-    it(`works with query with nested selectionSet`, () => {
+    it(`deduplicates query with nested selectionSet`, () => {
         const query = gql`
             query {
                 authors {
@@ -364,7 +364,7 @@ describe('executeQuery', () => {
         expect(print(query)).toEqual(print(expectedDeduplicatedQuery));
     });
 
-    it(`works with query with subSelectedArray`, () => {
+    it(`deduplicates query with subSelectedArray`, () => {
         const query = gql`
             query {
                 authors {
@@ -436,7 +436,7 @@ describe('executeQuery', () => {
         expect(print(query)).toEqual(print(expectedDeduplicatedQuery));
     });
 
-    it(`works with query with subSelectedArray containing null value`, () => {
+    it(`deduplicates query with subSelectedArray containing null value`, () => {
         const query = gql`
             query {
                 posts {
@@ -480,7 +480,7 @@ describe('executeQuery', () => {
         expect(print(query)).toEqual(print(expectedDeduplicatedQuery));
     });
 
-    it(`works with query with nested subSelectedArray`, () => {
+    it(`deduplicates query with nested subSelectedArray`, () => {
         const query = gql`
             query {
                 nestedPosts {

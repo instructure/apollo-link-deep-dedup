@@ -67,6 +67,7 @@ export class DeepDedupLink extends ApolloLink {
 
         // Apollo Link uses observable pattern to chain together the links
         // Here's the documentation on zen-observable: https://github.com/zenparsing/zen-observable#api
+        // Upstream points to the query issuer and downstream points to the network
 
         // Case A: if query has been fully resolved, complete the operation and pass the result to upstream links
         if (cacheResult.allResolved) {
@@ -75,6 +76,8 @@ export class DeepDedupLink extends ApolloLink {
                 deduplicatedOp,
                 initialQuery,
             );
+
+            // pass data up to upstream links and complete the operation
             return new Observable(upstreamLinkObserver => {
                 upstreamLinkObserver.next({ data: cacheResult.data });
                 upstreamLinkObserver.complete();
@@ -83,9 +86,10 @@ export class DeepDedupLink extends ApolloLink {
 
         // Case B: if query has not been fully resolved, pass deduplicated query to downstream links
         const downstreamLinkObservable = forward(deduplicatedOp);
+
         // create an Observable for upstream links to subscribe to
         // Here's where we subscribe to the result from downstream links, aggregate the result, and notify the upstream links
-        const thisLinkObservable = new Observable(upstreamLinkObserver => {
+        return new Observable(upstreamLinkObserver => {
             // subscribe to the resulting link
             const subscription = downstreamLinkObservable.subscribe({
                 next: (downstreamData) => {
@@ -113,7 +117,6 @@ export class DeepDedupLink extends ApolloLink {
                 subscription.unsubscribe();
             };
         });
-        return thisLinkObservable; // return thisLinkObservable for upstream links to subscribe to
     }
 
     /**

@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import CacheDataStore from '../cacheDataStore';
 import readCacheResolver from '../readCacheResolver';
 
-describe('readCacheResolver', () => {
+describe('readCacheResolver()', () => {
     // initialize fake cache store
     const postObjectScalar = {
         'type': 'id',
