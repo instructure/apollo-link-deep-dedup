@@ -40,7 +40,7 @@ describe('readCacheResolver', () => {
         },
     });
 
-    // build store from cache data and include it in resolutionContext
+    // initialize store using cache data and include it in resolutionContext
     const resolutionContext = { store: new CacheDataStore(cache.extract()) };
 
     it(`returns the correct data with given fieldName and args`, () => {
