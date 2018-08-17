@@ -1,7 +1,7 @@
 import 'jest';
-import cacheDataStore from '../cacheDataStore';
+import CacheDataStore from '../cacheDataStore';
 
-describe('cacheDataStore', () => {
+describe('CacheDataStore', () => {
     const author1Object = {
         'id': 1,
         'firstName': 'Tom',
@@ -34,7 +34,7 @@ describe('cacheDataStore', () => {
         'Post:1': post1Object,
     };
 
-    const store = new cacheDataStore(seed);
+    const store = new CacheDataStore(seed);
 
     it(`gets correct data from store`, () => {
         // get result

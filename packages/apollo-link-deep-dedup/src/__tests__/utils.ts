@@ -4,7 +4,7 @@ import { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
 import { isQueryOperation } from '../utils';
 
-describe('isQueryOperation', () => {
+describe('isQueryOperation()', () => {
     it(`returns true with query operation`, () => {
         const queryDocument: DocumentNode = gql`
             query test1($x: String) {

@@ -16,10 +16,10 @@ import {
 // util functions
 import {
     argumentsObjectFromField,
+    getDirectiveInfoFromField,
     getMainDefinition,
     isField,
     resultKeyNameFromField,
-    shouldInclude,
 } from 'apollo-utilities';
 import cloneDeep = require('lodash.clonedeep');
 import merge = require('lodash.merge');
@@ -77,9 +77,12 @@ const executeSelectionSet = (
     const deduplicatedSelections: SelectionNode[] = [];
 
     selectionSet.selections.forEach((selection: SelectionNode) => {
-        // validate selection
-        if (!shouldInclude(selection, variableValues)
-            || !isField(selection)) {
+        // 08/15/2018: we currently bypass deduplicating fragment and directives
+        if (!isField(selection) ||
+            (isField(selection) &&
+                getDirectiveInfoFromField(selection, variableValues) !== null
+            )
+        ) {
             // append it to the deduplicatedSelections as part of the new AST
             deduplicatedSelections.push(selection);
             return;
@@ -204,3 +207,5 @@ const executeSubSelectedArray = (
     const allResolved = tempField.selectionSet.selections.length === 0;
     return { data: (resultDataList as FetchResult), allResolved } as ExecutionResult;
 };
+
+export default executeQuery;

@@ -9,6 +9,7 @@ import {
     Observable,
 } from 'apollo-link';
 import gql from 'graphql-tag';
+import cloneDeep = require('lodash.clonedeep');
 
 import { DeepDedupLink } from '../deepDedupLink';
 
@@ -26,7 +27,32 @@ describe('DeepDedupLink', () => {
     };
     const data = { test: 1 };
 
-    it(`runs query without errors`, async () => {
+    // initialize fake cache store
+    const author = {
+        'id': 1,
+        'firstName': 'Tom',
+        'lastName': 'Coleman',
+        '__typename': 'Author',
+    };
+    const authorQuery = gql`
+        query {
+            author {
+                id
+                firstName
+                lastName
+            }
+        }
+    `;
+    const authorCache = new InMemoryCache();
+    // write query and data to cache
+    authorCache.writeQuery({
+        query: authorQuery,
+        data: {
+            author,
+        },
+    });
+
+    it(`runs query without errors`, done => {
         const link = ApolloLink.from([
             new DeepDedupLink({ cache: new InMemoryCache() }),
             new ApolloLink(() => {
@@ -36,12 +62,13 @@ describe('DeepDedupLink', () => {
                 });
             }),
         ]);
-        execute(link, request).subscribe(result =>
-            expect(result).toBeTruthy(),
-        );
+        execute(link, request).subscribe(result => {
+            expect(result.data).toEqual(data);
+            done();
+        });
     });
 
-    it(`bypasses deduplication as desired`, async () => {
+    it(`bypasses deduplication if forceFetch`, () => {
         const newRequest = Object.assign({}, request);
         // add forceFetch rule
         newRequest.context = {
@@ -61,7 +88,7 @@ describe('DeepDedupLink', () => {
         execute(link, newRequest);
     });
 
-    it(`bypasses non-query operations`, async () => {
+    it(`bypasses non-query operations`, () => {
         const mutationDocument: DocumentNode = gql`
         mutation test1($x: String) {
             test(x: $x) {
@@ -110,14 +137,13 @@ describe('DeepDedupLink', () => {
 
     it(`accesses cache`, () => {
         const cache = new InMemoryCache();
-        // list of cache access functions,
-        // which will be specifically determined based on actual implementation later
-        const mockFuncNames = ['read', 'diff', 'readQuery', 'readFragment', 'extract'];
+        // cache access functions
+        const mockFuncNames = ['extract'];
         const cacheMocks: jest.SpyInstance<any>[] = mockFuncNames.map(funcName =>
             jest.spyOn(cache, funcName as any),
         );
         const link = ApolloLink.from([
-            new DeepDedupLink({ cache: cache }),
+            new DeepDedupLink({ cache }),
             new ApolloLink(() => {
                 let toHaveBeenCalled = false;
                 // inspect mocks in the following link
@@ -134,5 +160,170 @@ describe('DeepDedupLink', () => {
             }),
         ]);
         execute(link, request);
+    });
+
+    it(`works as expected if full cache hit`, done => {
+        let toHaveBeenCalled = false;
+        const initialQuery = cloneDeep(authorQuery);
+        const upstreamLink = new ApolloLink((operation, forward) => {
+            const downstreamLinkObservable = forward(operation);
+            return new Observable(upstreamLinkObserver => {
+                // subscribe to result from deepDedupLink
+                downstreamLinkObservable.subscribe((downstreamData) => {
+                    // assert that the query matches initial query after execution
+                    expect(operation.query).toEqual(initialQuery);
+                    // pass data to upstream
+                    upstreamLinkObserver.next(downstreamData);
+                });
+            });
+        });
+        const donwstreamLink = new ApolloLink(() => {
+            toHaveBeenCalled = true;
+            return new Observable(observer => {
+                observer.complete();
+            });
+        });
+
+        const link = ApolloLink.from([
+            upstreamLink,
+            new DeepDedupLink({ cache: authorCache }),
+            donwstreamLink,
+        ]);
+
+        const authorRequest: GraphQLRequest = { query: authorQuery };
+        execute(link, authorRequest).subscribe(result => {
+            // assert that result is expected
+            const expectedAuthorData = {
+                author: {
+                    'id': 1,
+                    'firstName': 'Tom',
+                    'lastName': 'Coleman',
+                },
+            };
+            expect(result.data).toEqual(expectedAuthorData);
+            // assert that the following link has not been invoked
+            expect(toHaveBeenCalled).toBe(false);
+            done();
+        });
+    });
+
+    it(`works as expected if full cache miss`, done => {
+        const dataFromResultingLink = { stringData: 'data from resulting link' };
+        const initialQuery = cloneDeep(document);
+        const upstreamLink = new ApolloLink((operation, forward) => {
+            const downstreamLinkObservable = forward(operation);
+            return new Observable(upstreamLinkObserver => {
+                // subscribe to result from deepDedupLink
+                downstreamLinkObservable.subscribe((downstreamData) => {
+                    // assert that the query matches initial query after execution
+                    expect(operation.query).toEqual(initialQuery);
+                    // pass data to upstream
+                    upstreamLinkObserver.next(downstreamData);
+                });
+            });
+        });
+        const downstreamLink = new ApolloLink((operation) => {
+            // assert that query has not been modified
+            expect(operation.variables).toBe(request.variables);
+            expect(operation.query).toBe(request.query);
+            return new Observable(observer => {
+                // pass data to upstream deepDedupLink
+                observer.next({ data: dataFromResultingLink });
+                observer.complete();
+            });
+        });
+
+        const link = ApolloLink.from([
+            upstreamLink,
+            new DeepDedupLink({ cache: authorCache }),
+            downstreamLink,
+        ]);
+
+        // execute request, instead of authorRequest, with authorCache (full cache miss)
+        execute(link, request).subscribe(result => {
+            // assert that result matches dataFromResultingLink
+            expect(result.data).toEqual(dataFromResultingLink);
+            done();
+        });
+    });
+
+    it(`partially deduplicates query`, done => {
+        const partiallyResolvableQuery = gql`
+            query {
+                author {
+                    id
+                    firstName
+                    lastName
+                    posts {
+                        id
+                        title
+                    }
+                }
+            }
+        `;
+        const initialQuery = cloneDeep(partiallyResolvableQuery);
+        const upstreamLink = new ApolloLink((operation, forward) => {
+            const downstreamLinkObservable = forward(operation);
+            return new Observable(upstreamLinkObserver => {
+                // subscribe to result from deepDedupLink
+                downstreamLinkObservable.subscribe((downstreamData) => {
+                    // assert that the query matches initial query after execution
+                    expect(operation.query).toEqual(initialQuery);
+                    // pass data to upstream
+                    upstreamLinkObserver.next(downstreamData);
+                });
+            });
+        });
+        const downstreamLink = new ApolloLink((operation) => {
+            return new Observable(observer => {
+                const deduplicatedQuery = gql`
+                    query {
+                        author {
+                            posts {
+                                id
+                                title
+                            }
+                        }
+                    }
+                `;
+
+                // assert that query has been deduplicated as expected
+                expect(operation.query.definitions).toEqual(deduplicatedQuery.definitions);
+                // return data for the deduplicated query
+                observer.next({
+                    data: {
+                        author: {
+                            posts: ['post1', 'post2', 'post3'],
+                        },
+                    },
+                });
+                observer.complete();
+            });
+        });
+
+        const link = ApolloLink.from([
+            upstreamLink,
+            new DeepDedupLink({ cache: authorCache }),
+            downstreamLink,
+        ]);
+
+        const partiallyResolvableRequest: GraphQLRequest = { query: partiallyResolvableQuery };
+        execute(link, partiallyResolvableRequest).subscribe(result => {
+            // assert that result is expected
+            const expectedResultData = {
+                author: {
+                    'id': 1,
+                    'firstName': 'Tom',
+                    'lastName': 'Coleman',
+                    'posts': [
+                        'post1',
+                        'post2',
+                        'post3',
+                    ],
+                },
+            };
+            expect(result.data).toEqual(expectedResultData);
+            done();
+        });
     });
 });
