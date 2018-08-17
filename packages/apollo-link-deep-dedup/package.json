@@ -26,6 +26,7 @@
     "author": "Leon Tao Long <tlong@instructure.com>",
     "license": "UNLICENSED",
     "dependencies": {
+        "apollo-cache": "^1.1.12",
         "apollo-link": "^1.2.2",
         "lodash.clonedeep": "^4.5.0",
         "lodash.merge": "^4.6.1"
@@ -35,7 +36,6 @@
         "@types/jest": "^23.1.1",
         "@types/lodash.clonedeep": "^4.5.4",
         "@types/lodash.merge": "^4.6.4",
-        "apollo-cache": "^1.1.12",
         "apollo-cache-inmemory": "^1.2.5",
         "graphql": "^0.13.2",
         "graphql-tag": "^2.9.2",
