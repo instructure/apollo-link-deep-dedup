@@ -17,7 +17,7 @@
         "build": "tsc -p .",
         "clean": "rimraf lib && rimraf coverage",
         "test": "jest --coverage",
-        "lint": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts ",
+        "lint": "tslint -p tsconfig.json src/*.ts ",
         "lint-fix": "tslint -p tsconfig.json -c ../../tslint.json src/*.ts --fix",
         "prepublishOnly": "npm run clean && npm run build",
         "prepush": "test -z \"$(git status --porcelain)\" || (echo \"Respository is dirty.\"; exit 1) && npm run lint && npm run test",
