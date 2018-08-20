@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "lib",
         "target": "es5",
         "lib": [
             "es6",
@@ -16,5 +18,11 @@
         "skipLibCheck": true,
         "strict": true,
         "alwaysStrict": true
-    }
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "src/**/__tests__/*.ts"
+    ]
 }
