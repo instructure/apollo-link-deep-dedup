@@ -4,9 +4,9 @@ A custom [Apollo Link](https://www.apollographql.com/docs/link/) library for res
 
 ## Motivation
 
-Apollo client has been developed and consumed by a large GraphQL community. However, the implementation of query processing and cache mechanism result in sending full queries, which can be partially fulfilled by the cached data, to the server over the network every time.
+The implementation of Apollo client result in sending full queries to the server over the network, which can be partially fulfilled by the cached data.
 
-Resolving every query with cached data as much as possible and issuing the minimal request to the server will reduce the size of data transferring over the network, leading to a lower network latency; More importantly, it alleviates the query resolution work on the server on an each-query basis.
+Resolving every query with cached data as much as possible and issuing the minimal request to the server reduces the size of data transferring over the network, and alleviates the query resolution work on the server on an each-query basis.
 
 ## Features
 
@@ -113,7 +113,7 @@ const client = new ApolloClient({
 
 ## Options
 
-DeepDedupLink takes an object with one required `cache` option
+`deepDedupLink` takes an object with one required `cache` option
 
 - `cache`: the same cache object passed in when initialiing `ApolloClient`
 
