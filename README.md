@@ -4,7 +4,7 @@ A custom [Apollo Link](https://www.apollographql.com/docs/link/) library for res
 
 ## Motivation
 
-The implementation of Apollo client result in sending full queries to the server over the network, which can be partially fulfilled by the cached data.
+The implementation of Apollo client results in sending full queries to the server over the network, which can be partially fulfilled by the cached data.
 
 Resolving every query with cached data as much as possible and issuing the minimal request to the server reduces the size of data transferring over the network, and alleviates the query resolution work on the server on an each-query basis.
 
@@ -147,3 +147,5 @@ git clone https://github.com/instructure/apollo-link-deep-dedup.git
 npm install
 npm run watch
 ```
+
+A development guide can be found [here](./docs/development.md)
