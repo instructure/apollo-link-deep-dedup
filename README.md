@@ -15,7 +15,7 @@ Apollo client writes the data from every query to the cache as normalized object
 - resolves the query against the cache
 - gets partial results from cache
 - removes fully-resolved fields from the query
-- sends query to downstream links (e.g. httpLink for issuing request to the server)
+- sends query to downstream links (e.g. `httpLink` for issuing request to the server)
 - merges partial results from both cache and server
 - sends full result to upstream links
 
@@ -91,9 +91,9 @@ const deepDedupLink = new DeepDedupLink({ cache });
 
 // inject link
 const links = ApolloLink.from([
-    ...(upstreamLinks),
+    // ...(upstreamLinks),
     deepDedupLink,
-    ...(downstreamLinks, e.g. httpLink),
+    // ...(downstreamLinks, e.g. httpLink),
 ]);
 
 // initialize apollo client with the cache and links
