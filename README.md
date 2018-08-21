@@ -121,7 +121,7 @@ const client = new ApolloClient({
 
 `deepDedupLink` takes an object with one required `cache` option
 
-- `cache`: the same cache object passed in when initialiing `ApolloClient`
+- `cache`: the same cache object passed in when initializing `ApolloClient`
 
 ## Context
 
