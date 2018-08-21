@@ -21,53 +21,59 @@ Apollo client writes the data from every query to the cache as normalized object
 
 `deepDedupLink` deduplicates queries thoroughly. Even with very nested queries, it is able to deduplicate the query at every-field level (see below example).
 
-It currently only supports [`apollo-cache-inmemory`](https://github.com/apollographql/apollo-client/tree/master/packages/apollo-cache-inmemory) and bypasses deduplication on fields with `directives` and `fragments`.
+It currently only supports [`apollo-cache-inmemory`](https://github.com/apollographql/apollo-client/tree/master/packages/apollo-cache-inmemory) and bypasses deduplication on non-query operations (e.g. `mutation` and `subscription`) and fields with `directives` and `fragments`.
 
 ## Example
 
 First query
 
 ```javascript
-authors {
-    id
-    firstName
-    posts {
+query {
+    authors {
         id
-        votes
+        firstName
+        posts {
+            id
+            votes
+        }
     }
-}
-press {
-    name
-    address
+    press {
+        name
+        address
+    }
 }
 ```
 
 Second query without deduplication
 
 ```javascript
-authors {
-    id
-    firstName
-    lastName
-    posts {
+query {
+    authors {
         id
-        votes
-        title
+        firstName
+        lastName
+        posts {
+            id
+            votes
+            title
+        }
     }
-}
-press {
-    name
-    address
+    press {
+        name
+        address
+    }
 }
 ```
 
 Second query with deduplication (the one that gets sent to the server)
 
 ```javascript
-authors {
-    lastName
-    posts {
-        title
+query {
+    authors {
+        lastName
+        posts {
+            title
+        }
     }
 }
 ```
