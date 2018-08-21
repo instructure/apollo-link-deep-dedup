@@ -25,7 +25,7 @@ It currently only supports [`apollo-cache-inmemory`](https://github.com/apollogr
 
 ## Example
 
-Previous query
+First query
 
 ```javascript
 authors {
@@ -36,9 +36,13 @@ authors {
         votes
     }
 }
+press {
+    name
+    address
+}
 ```
 
-Current query without deduplication
+Second query without deduplication
 
 ```javascript
 authors {
@@ -51,9 +55,13 @@ authors {
         title
     }
 }
+press {
+    name
+    address
+}
 ```
 
-Current query with deduplication (sent to the server)
+Second query with deduplication (the one that gets sent to the server)
 
 ```javascript
 authors {
