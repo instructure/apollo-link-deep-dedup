@@ -148,4 +148,4 @@ npm install
 npm run watch
 ```
 
-A development guide can be found [here](./docs/development.md)
+A development guide can be found [here](./docs/development.md).

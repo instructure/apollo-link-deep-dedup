@@ -19,9 +19,8 @@ The goal of `deepDedupLink` is to resolve GraphQL query against cached data firs
 
 - Restores the query to `initial query`
 - If **full cache hit**, sends the `data from cache` directly to and notifies the upstream Links
-- Otherwise, sends the modified query to downstream Links and subscribe to the results. Once there’s data back from downstream links
-  - If we encounter **full cache miss**, sends the `data from network` directly to and notifies the upstream Links
-  - If we have partially resolved the query, aggregate the results by merging `data from cache` and `data from network`, sends final results to and notifies upstream Links
+- Otherwise, sends the modified query to downstream Links and subscribe to the results
+  - Once there’s data back from downstream links, aggregate the results by merging `data from cache` and `data from network`, sends final results to and notifies upstream Links
 
 The flow can be represented in the diagram below:
 
