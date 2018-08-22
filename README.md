@@ -81,6 +81,7 @@ query {
 ## Usage
 
 ```javascript
+import InMemoryCache from 'apollo-cache-inmemory';
 import { DeepDedupLink } from 'apollo-link-deep-dedup';
 
 const cache = new InMemoryCache();
@@ -103,16 +104,16 @@ const cache = new InMemoryCache();
 // pass in the cache as an option to initialize deepDedupLink
 const deepDedupLink = new DeepDedupLink({ cache });
 
-// inject link
-const links = ApolloLink.from([
-    // ...(upstreamLinks),
+// compose apollo links
+const link = ApolloLink.from([
+    // ...upstreamLinks,
     deepDedupLink,
-    // ...(downstreamLinks, e.g. httpLink),
+    // ...downstreamLinks (e.g. httpLink),
 ]);
 
 // initialize apollo client with the cache and links
 const client = new ApolloClient({
-    link: links,
+    link,
     cache,
 });
 ```
