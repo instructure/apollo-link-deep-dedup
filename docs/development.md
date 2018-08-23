@@ -1,13 +1,8 @@
-# gql-client
-
-A simple [Apollo Client](https://www.apollographql.com/docs/react/) that issues GraphQL requests
-
-## Development Guide
-
-### Getting started
+### Getting Started
 
 ```shell
 npm install
+npm run watch
 ```
 
 ### Test
@@ -38,4 +33,10 @@ npm run build
 
 ```shell
 npm run clean
+```
+
+### Push to origin non-master branch
+
+```shell
+npm run push
 ```

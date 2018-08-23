@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building....'
-                sh 'npm install && npm run bootstrap && npm run build'
+                sh 'npm install && npm run build'
             }
         }
         stage('Run Linter') {
@@ -24,7 +24,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'npm run start & npm run test'
+                sh 'npm test'
             }
         }
     }
