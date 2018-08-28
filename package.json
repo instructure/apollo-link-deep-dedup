@@ -6,6 +6,9 @@
         "type": "git",
         "url": "https://github.com/instructure/apollo-link-deep-dedup.git"
     },
+    "bugs": {
+        "url": "https://github.com/instructure/apollo-link-deep-dedup/issues"
+    },
     "main": "./lib/bundle.umd.js",
     "module": "./lib/index.js",
     "typings": "./lib/index.d.ts",
@@ -30,7 +33,7 @@
         "Query Deduplication"
     ],
     "author": "Leon Tao Long <tlong@instructure.com>",
-    "license": "UNLICENSED",
+    "license": "MIT",
     "dependencies": {
         "apollo-link": "^1.2.2",
         "lodash.clonedeep": "^4.5.0",
