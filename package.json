@@ -30,7 +30,7 @@
         "Query Deduplication"
     ],
     "author": "Leon Tao Long <tlong@instructure.com>",
-    "license": "UNLICENSED",
+    "license": "MIT",
     "dependencies": {
         "apollo-link": "^1.2.2",
         "lodash.clonedeep": "^4.5.0",
