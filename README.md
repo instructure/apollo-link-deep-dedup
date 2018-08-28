@@ -78,6 +78,12 @@ query {
 }
 ```
 
+## Installation
+
+```bash
+npm install apollo-link-deep-dedup --save
+```
+
 ## Usage
 
 ```javascript
@@ -142,7 +148,7 @@ client.query({
 
 ## Development
 
-```shell
+```bash
 git clone https://github.com/instructure/apollo-link-deep-dedup.git
 
 npm install
@@ -150,3 +156,7 @@ npm run watch
 ```
 
 A development guide can be found [here](./docs/development.md).
+
+## License
+
+[MIT](./LICENSE)

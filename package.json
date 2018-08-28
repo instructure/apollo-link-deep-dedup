@@ -6,6 +6,9 @@
         "type": "git",
         "url": "https://github.com/instructure/apollo-link-deep-dedup.git"
     },
+    "bugs": {
+        "url": "https://github.com/instructure/apollo-link-deep-dedup/issues"
+    },
     "main": "./lib/bundle.umd.js",
     "module": "./lib/index.js",
     "typings": "./lib/index.d.ts",
