@@ -81,7 +81,7 @@ query {
 ## Installation
 
 ```bash
-npm install apollo-link-deep-dedup --save
+npm install @instructure/apollo-link-deep-dedup --save
 ```
 
 ## Usage

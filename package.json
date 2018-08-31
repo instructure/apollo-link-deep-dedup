@@ -1,5 +1,5 @@
 {
-    "name": "apollo-link-deep-dedup",
+    "name": "@instructure/apollo-link-deep-dedup",
     "version": "1.0.0",
     "description": "An Apollo Link library for GraphQL Query Deduplication",
     "repository": {
